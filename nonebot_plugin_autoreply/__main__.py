@@ -15,7 +15,7 @@ from .config import ReplyEntry, replies
 
 T = TypeVar("T")
 
-matcher = on_message(priority=99)
+matcher = on_message(priority=99, block=False)
 
 
 def check_filter(filter: ReplyEntry.Filter[T], val: T) -> bool:
