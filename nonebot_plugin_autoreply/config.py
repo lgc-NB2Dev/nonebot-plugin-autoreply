@@ -23,6 +23,7 @@ class ReplyEntry(BaseModel):
         ignore_case: bool = True
         strip: bool = True
         allow_plaintext: bool = True
+        replies_random: bool = True
 
     class ReplyDict(TypedDict):
         type: str

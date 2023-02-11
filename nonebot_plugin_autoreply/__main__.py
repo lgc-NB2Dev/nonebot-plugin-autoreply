@@ -79,15 +79,27 @@ def get_reply(event: MessageEvent) -> Optional[Message]:
                 matched = (match in msg) or (
                     (match in msg_plaintext) if mat.allow_plaintext else False
                 )
-
             if matched:
-                reply = random.choice(rep.replies)
-                if isinstance(reply, list):
-                    reply = [MessageSegment(x["type"], x["data"]) for x in reply]
-                return Message(reply)
+                if mat.replies_random:
+                    reply = random.choice(rep.replies)
+                    if isinstance(reply, list):
+                        reply = [MessageSegment(x["type"], x["data"]) for x in reply]
+                    return reply
+                else:
+                    result=[]
+                    for reply in rep.replies:
+                        if isinstance(reply, list):
+                            reply = [MessageSegment(x["type"], x["data"]) for x in reply]
+                        result.append(reply)
+                    return tuple(result)
 
 
 @matcher.handle()
 async def _(matcher: Matcher, event: MessageEvent):
     if reply := get_reply(event):
-        await matcher.finish(reply)
+        if isinstance(reply, tuple):
+            for element in reply:
+                await matcher.send(Message(element))
+        else:
+            await matcher.finish(Message(reply))
+        await matcher.finish()
