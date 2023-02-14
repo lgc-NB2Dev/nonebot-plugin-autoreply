@@ -188,8 +188,8 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
       // message 中不允许嵌套其他的 type=multi 类型的回复
       {
         "type": "multi",
-        // delay 是每条消息的发送延时，单位为毫秒，格式为 [最低延时, 最高延时]
-        // 可以不填，默认为 [0, 0]
+        // delay 是每条消息发送成功后的延时，格式为 [最低延时, 最高延时]
+        // 单位为毫秒（1000 毫秒 = 1 秒），可以不填，默认为 [0, 0]
         "delay": [1000, 1000],
         "message": [
           "hello! 一会给你发张图哦~",
