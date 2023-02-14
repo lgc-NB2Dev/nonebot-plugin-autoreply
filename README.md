@@ -185,18 +185,24 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 
       // type=multi 时，message 需要为上面提到的消息类型的数组
       // 会按顺序发送 message 中的所有内容
+      // message 中不允许嵌套其他的 type=multi 类型的回复
       {
         "type": "multi",
-        "delay": [200, 200], // 每条消息的发送延时，单位为毫秒，格式为 [最低延时, 最高延时]
+        // delay 是每条消息的发送延时，单位为毫秒，格式为 [最低延时, 最高延时]
+        // 可以不填，默认为 [0, 0]
+        "delay": [1000, 1000],
         "message": [
-          {
-            "type": "normal",
-            "message": "hello!"
-          },
-          {
-            "type": "normal",
-            "message": "hello! 现在是 0.2 秒后~"
-          }
+          "hello! 一会给你发张图哦~",
+          "[CQ:image,file=https://pixiv.re/103981177.png]一会给你分享首歌哦awa~",
+          [
+            {
+              "type": "music",
+              "data": {
+                "type": "163",
+                "id": "2008994667"
+              }
+            }
+          ]
         ]
       }
 
