@@ -34,7 +34,7 @@ class MessageSegmentModel(BaseModel):
 
 class ReplyModel(BaseModel):
     type: Literal["normal", "plain", "array", "multi"]
-    message: Union[str, List[MessageSegmentModel], List["ReplyModel"]]
+    message: Union[str, List[MessageSegmentModel], List[ReplyType]]
     delay: Tuple[int, int] = (0, 0)
 
 
@@ -60,11 +60,13 @@ config = ConfigModel.parse_obj(get_driver().config)
 
 
 def reload_replies():
-    global replies
-    replies = [
-        ReplyEntryModel(**x)
-        for x in json.loads(REPLY_JSON_PATH.read_text(encoding="u8"))
-    ]
+    replies.clear()
+    replies.extend(
+        [
+            ReplyEntryModel(**x)
+            for x in json.loads(REPLY_JSON_PATH.read_text(encoding="u8"))
+        ]
+    )
 
 
 reload_replies()

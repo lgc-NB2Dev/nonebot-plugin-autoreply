@@ -13,7 +13,6 @@ from nonebot.adapters.onebot.v11 import (
 )
 from nonebot.log import logger
 from nonebot.matcher import Matcher
-from nonebot.params import Arg
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 from typing_extensions import TypeVarTuple, Unpack
@@ -152,7 +151,9 @@ autoreply_matcher = on_message(
 
 
 @autoreply_matcher.handle()
-async def _(matcher: Matcher, reply: ReplyType = Arg("reply")):
+async def _(matcher: Matcher, state: T_State):
+    reply: ReplyType = state["reply"]
+
     msg, delay = get_reply_msgs(reply)
     for m in msg:
         await matcher.send(m)
