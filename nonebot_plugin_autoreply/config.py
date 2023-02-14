@@ -55,7 +55,16 @@ class ConfigModel(BaseModel):
     autoreply_priority: int = 99
 
 
-replies = [
-    ReplyEntryModel(**x) for x in json.loads(REPLY_JSON_PATH.read_text(encoding="u8"))
-]
+replies: List[ReplyEntryModel] = []
 config = ConfigModel.parse_obj(get_driver().config)
+
+
+def reload_replies():
+    global replies
+    replies = [
+        ReplyEntryModel(**x)
+        for x in json.loads(REPLY_JSON_PATH.read_text(encoding="u8"))
+    ]
+
+
+reload_replies()

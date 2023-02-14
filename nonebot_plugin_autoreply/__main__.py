@@ -4,15 +4,17 @@ import re
 from itertools import starmap
 from typing import Callable, Iterable, List, Optional, Tuple, TypeVar, cast
 
-from nonebot import on_message
+from nonebot import on_command, on_message
 from nonebot.adapters.onebot.v11 import (
     GroupMessageEvent,
     Message,
     MessageEvent,
     MessageSegment,
 )
+from nonebot.log import logger
 from nonebot.matcher import Matcher
 from nonebot.params import Arg
+from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 from typing_extensions import TypeVarTuple, Unpack
 
@@ -23,6 +25,7 @@ from .config import (
     ReplyModel,
     ReplyType,
     config,
+    reload_replies,
     replies,
 )
 
@@ -156,3 +159,17 @@ async def _(matcher: Matcher, reply: ReplyType = Arg("reply")):
 
         if delay:
             await asyncio.sleep(random.randint(*delay) / 1000)
+
+
+reload_matcher = on_command("重载自动回复", permission=SUPERUSER)
+
+
+@reload_matcher.handle()
+async def _(matcher: Matcher):
+    try:
+        reload_replies()
+    except:
+        logger.exception("重载配置失败")
+        await matcher.finish("重载失败，请检查后台输出")
+    else:
+        await matcher.finish("重载自动回复配置成功~")
