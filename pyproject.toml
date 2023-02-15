@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-autoreply"
-version = "0.2.0"
+version = "0.2.1"
 description = "As the name suggests"
 authors = ["lgc2333 <lgc2333@126.com>"]
 license = "MIT"
