@@ -35,9 +35,11 @@ TArgs = TypeVarTuple("TArgs")
 def check_list(
     function: Callable[[Unpack[TArgs]], bool],
     will_check: Iterable[tuple[Unpack[TArgs]]],
+    is_any: bool = False,
 ) -> bool:
     # 感谢 nb2 群内 Bryan不可思议 佬的帮助！！
-    return all(starmap(function, will_check))
+    iterator = starmap(function, will_check)
+    return any(iterator) if is_any else all(iterator)
 
 
 def check_filter(filter: FilterModel[T], val: Optional[T]) -> bool:
@@ -98,7 +100,7 @@ async def message_checker(event: MessageEvent, state: T_State) -> bool:
 
         if not (
             check_list(check_filter, filter_checks)
-            and check_list(check_match, match_checks)
+            and check_list(check_match, match_checks, True)
         ):
             continue
 
