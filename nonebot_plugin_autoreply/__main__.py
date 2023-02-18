@@ -43,9 +43,9 @@ def check_list(
 
 
 def check_filter(filter: FilterModel[T], val: Optional[T]) -> bool:
-    # 都空也算包括
-    ok = val in filter.values if val else ((not filter) and (not val))
-    if filter.type == "black":
+    # 判断黑名单 值不在列表中ok
+    ok = val not in filter.values
+    if filter.type == "white":  # 白名单则反过来
         ok = not ok
     return ok
 
