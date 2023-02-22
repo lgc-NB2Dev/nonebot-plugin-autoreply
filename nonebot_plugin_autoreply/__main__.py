@@ -34,7 +34,7 @@ TArgs = TypeVarTuple("TArgs")
 
 def check_list(
     function: Callable[[Unpack[TArgs]], bool],
-    will_check: Iterable[tuple[Unpack[TArgs]]],
+    will_check: Iterable[Tuple[Unpack[TArgs]]],
     is_any: bool = False,
 ) -> bool:
     # 感谢 nb2 群内 Bryan不可思议 佬的帮助！！
