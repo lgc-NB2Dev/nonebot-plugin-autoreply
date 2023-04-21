@@ -172,3 +172,4 @@ cython_debug/
 
 testnb2/
 .idea/
+.pdm-python

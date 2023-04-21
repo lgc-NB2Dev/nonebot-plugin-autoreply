@@ -20,6 +20,7 @@ from typing_extensions import TypeVarTuple, Unpack
 from .config import (
     FilterModel,
     MatchModel,
+    MatchType,
     MessageSegmentModel,
     ReplyModel,
     ReplyType,
@@ -42,15 +43,18 @@ def check_list(
     return any(iterator) if is_any else all(iterator)
 
 
-def check_filter(filter: FilterModel[T], val: Optional[T]) -> bool:
+def check_filter(will_check: FilterModel[T], val: Optional[T]) -> bool:
     # 判断黑名单 值不在列表中ok
-    ok = val not in filter.values
-    if filter.type == "white":  # 白名单则反过来
+    ok = val not in will_check.values
+    if will_check.type == "white":  # 白名单则反过来
         ok = not ok
     return ok
 
 
-def check_match(match: MatchModel, event: MessageEvent) -> bool:
+def check_match(match: MatchType, event: MessageEvent) -> bool:
+    if isinstance(match, str):
+        match = MatchModel(match=match)
+
     if match.to_me and (not event.is_tome()):
         return False
 
@@ -70,7 +74,7 @@ def check_match(match: MatchModel, event: MessageEvent) -> bool:
                 re.search(match_template, msg_plaintext, flag)
                 if match.allow_plaintext
                 else False
-            )
+            ),
         )
 
     if match.ignore_case:
@@ -111,10 +115,16 @@ async def message_checker(event: MessageEvent, state: T_State) -> bool:
 
 
 def get_reply_msgs(
-    reply: ReplyType, refuse_multi: bool = False
+    reply: ReplyType,
+    refuse_multi: bool = False,
 ) -> Tuple[List[Message], Optional[Tuple[int, int]]]:
     if isinstance(reply, str):
-        reply = ReplyModel(type="normal", message=reply)
+        str_is_plain = reply.startswith("@")
+        if str_is_plain:
+            reply = reply[1:]
+
+        reply = ReplyModel(type="plain" if str_is_plain else "normal", message=reply)
+
     elif isinstance(reply, list):
         reply = ReplyModel(type="array", message=reply)
 
@@ -130,8 +140,8 @@ def get_reply_msgs(
                 [
                     MessageSegment(type=x.type, data=x.data)
                     for x in cast(List[MessageSegmentModel], msg)
-                ]
-            )
+                ],
+            ),
         ], None
 
     if rt == "multi":

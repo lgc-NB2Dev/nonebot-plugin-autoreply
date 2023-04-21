@@ -1,18 +1,24 @@
-[tool.poetry]
+[project]
 name = "nonebot-plugin-autoreply"
-version = "0.2.3"
-description = "As the name suggests"
-authors = ["lgc2333 <lgc2333@126.com>"]
-license = "MIT"
+version = "0.2.4"
+description = "A powerful auto reply plugin for NoneBot2"
+authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
+dependencies = [
+    "nonebot2>=2.0.0rc1",
+    "pydantic>=1.10.4",
+    "nonebot-adapter-onebot>=2.1.0",
+    "typing-extensions>=4.4.0",
+]
+requires-python = ">=3.8,<4.0"
 readme = "README.md"
+license = { text = "MIT" }
 
-[tool.poetry.dependencies]
-python = ">=3.8,<4.0"
-nonebot2 = ">=2.0.0rc1"
-pydantic = "^1.10.4"
-nonebot-adapter-onebot = ">=2.1.0"
-typing-extensions = "^4.4.0"
+[tool.pdm.build]
+includes = []
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.urls]
+homepage = "https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply"
