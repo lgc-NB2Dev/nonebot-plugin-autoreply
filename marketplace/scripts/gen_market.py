@@ -78,10 +78,11 @@ def main():
         sidebar.append(
             f'- [{meta.name}](market/{dir_name} "{meta.name} | AutoReply 回复市场")',
         )
+        br_desc = meta.desc.replace("\n", "<br />")
         main_readme.append(
             f"| [{meta.name}](market/{dir_name}) "
             f"| [{meta.author}]({meta.author_link}) "
-            f"| {meta.desc} "
+            f"| {br_desc} "
             f"| {tags} |",
         )
 
