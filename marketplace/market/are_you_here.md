@@ -3,8 +3,7 @@
 
 作者：[student_2333](https://lgc2333.top)
 
-![在](https://img.shields.io/badge/-在-green?style=flat)
-![在吗](https://img.shields.io/badge/-在吗-green?style=flat)
+![在](https://img.shields.io/badge/-在-brightgreen?style=flat-square) ![在吗](https://img.shields.io/badge/-在吗-brightgreen?style=flat-square)
 
 > @Bot 在吗 回复
 

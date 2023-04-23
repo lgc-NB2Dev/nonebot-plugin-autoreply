@@ -27,6 +27,15 @@ _✨ 自动回复 ✨_
 </a>
 </div>
 
+## 🛒 配置市场
+
+![market](https://raw.githubusercontent.com/lgc-NB2Dev/readme/main/autoreply/QQ截图20230423192951.png)
+
+[点击进入](https://autoreply.lgc2333.top)
+
+我们的回复配置市场上线啦~  
+在这里，你可以分享你的回复配置，也可以找到其他人分享的回复配置，欢迎各位使用！
+
 ## 📖 介绍
 
 一个简单的关键词自动回复插件，支持 模糊匹配、完全匹配 与 正则匹配，配置文件高度自定义  

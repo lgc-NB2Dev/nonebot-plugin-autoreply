@@ -20,6 +20,13 @@ class ReplyMeta:
 def main():
     reply_paths = [x for x in REPLIES_PATH.iterdir() if x.is_dir()]
 
+    main_readme = [
+        "<!-- markdownlint-disable -->",
+        "# 回复市场\n",
+        "这里可以看到大家分享的回复配置！\n",
+        "| 名称 | 作者 | 介绍 | 标签 |",
+        "| :- | :- | :- | :- |",
+    ]
     sidebar = ["<!-- markdownlint-disable -->"]
 
     for path in reply_paths:
@@ -32,11 +39,9 @@ def main():
         meta = ReplyMeta(**json.loads(meta_path.read_text(encoding="u8")))
         reply = reply_path.read_text(encoding="u8")
 
-        sidebar.append(f"- [{meta.name}](market/{dir_name})")
-
-        tags = "\n".join(
+        tags = " ".join(
             [
-                f"![{x}](https://img.shields.io/badge/-{x}-green?style=flat)"
+                f"![{x}](https://img.shields.io/badge/-{x}-brightgreen?style=flat-square)"
                 for x in meta.tags
             ],
         )
@@ -70,8 +75,21 @@ def main():
             "```"
         )
 
+        sidebar.append(
+            f'- [{meta.name}](market/{dir_name} "{meta.name} | AutoReply 回复市场")',
+        )
+        main_readme.append(
+            f"| [{meta.name}](market/{dir_name}) "
+            f"| [{meta.author}]({meta.author_link}) "
+            f"| {meta.desc} "
+            f"| {tags} |",
+        )
+
         readme_path = MARKET_PATH / f"{dir_name}.md"
         readme_path.write_text(readme, encoding="u8")
+        main_readme_path = MARKET_PATH / "README.md"
+        main_readme_path.write_text("\n".join(main_readme), encoding="u8")
+
         print(f"OK - {dir_name} - {meta.name}")
 
     SIDEBAR_MD_PATH.write_text("\n".join(sidebar), encoding="u8")
