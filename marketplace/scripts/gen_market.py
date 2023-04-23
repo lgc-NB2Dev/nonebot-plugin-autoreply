@@ -2,8 +2,10 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-REPLIES_PATH = Path(__file__).parent.parent / "replies"
-SIDEBAR_MD_PATH = REPLIES_PATH / "_sidebar.md"
+ROOT_PATH = Path(__file__).parent.parent
+MARKET_PATH = ROOT_PATH / "market"
+REPLIES_PATH = ROOT_PATH / "replies"
+SIDEBAR_MD_PATH = MARKET_PATH / "_sidebar.md"
 
 
 @dataclass
@@ -18,17 +20,19 @@ class ReplyMeta:
 def main():
     reply_paths = [x for x in REPLIES_PATH.iterdir() if x.is_dir()]
 
-    sidebar = []
+    sidebar = ["<!-- markdownlint-disable -->"]
 
     for path in reply_paths:
+        dir_name = path.name
+
         meta_path = path / "meta.json"
         reply_path = path / "reply.json"
         info_readme_path = path / "info.md"
-        readme_path = path / "README.md"
+
         meta = ReplyMeta(**json.loads(meta_path.read_text(encoding="u8")))
         reply = reply_path.read_text(encoding="u8")
 
-        sidebar.append(f"- [{meta.name}](replies/{path.name}/)")
+        sidebar.append(f"- [{meta.name}](market/{dir_name})")
 
         tags = "\n".join(
             [
@@ -39,6 +43,7 @@ def main():
         desc = "".join([f"> {x}" for x in meta.desc.splitlines()])
 
         readme = (
+            "<!-- markdownlint-disable -->\n"
             f"# {meta.name}\n"
             "\n"
             f"作者：[{meta.author}]({meta.author_link})\n"
@@ -53,8 +58,19 @@ def main():
             info = info_readme_path.read_text(encoding="u8")
             readme = f"{readme}{info}"
 
-        readme = f"{readme}\n\n## 配置内容\n\n```json\n{reply}\n```"
+        readme = (
+            f"{readme}\n"
+            "\n"
+            "## 配置内容\n"
+            "\n"
+            f"[点击下载](https://autoreply.lgc2333.top/replies/{dir_name}/reply.json)\n"
+            "\n"
+            "```json\n"
+            f"{reply}\n"
+            "```"
+        )
 
+        readme_path = MARKET_PATH / f"{dir_name}.md"
         readme_path.write_text(readme, encoding="u8")
 
     SIDEBAR_MD_PATH.write_text("\n".join(sidebar), encoding="u8")

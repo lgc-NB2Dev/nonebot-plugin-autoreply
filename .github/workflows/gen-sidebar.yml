@@ -18,10 +18,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Run Script
         run: |
-          python ./marketplace/scripts/gen_sidebar.py
+          python ./marketplace/scripts/gen_market.py
       - name: Push
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
-          git commit -m "generate market sidebar" -a || exit 0
+          git commit -m "generate market content" -a || exit 0
           git push

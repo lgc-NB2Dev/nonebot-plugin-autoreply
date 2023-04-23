@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD041 -->
 
-- [贡献指南](/contributing.md)
-- [回复市场](/replies/)
+- [首页](/)
+- [贡献指南](contributing/)
+- [回复市场](market/)
