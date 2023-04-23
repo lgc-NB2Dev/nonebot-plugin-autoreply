@@ -261,11 +261,11 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 下面是插件提供的变量列表
 
 - `{self_id}` - 机器人 QQ
-- `｛message_id｝` - 消息 ID
+- `{message_id}` - 消息 ID
 - `{user_id}` - 发送者 QQ
-- `｛nickname｝` - 发送者昵称
-- `｛card｝` - 发送者群名片
-- `｛group_id｝` - 消息来源群号（私聊等为 `None`）
+- `{nickname}` - 发送者昵称
+- `{card}` - 发送者群名片
+- `{group_id}` - 消息来源群号（私聊等为 `None`）
 
 下面放出几个示例，帮助大家更好的理解如何使用变量
 
@@ -321,7 +321,7 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
       "@[plain] [CQ:at,qq={user_id}] 啊咧？怎么 At 不了 {nickname}？",
 
       // 可以在消息中使用 {{ 和 }} 来转义大括号
-      // 前面的 ｛｛user_id｝｝ 会转义成 {user_id} 发送，而后面的 {nickname} 会被替换
+      // 前面的 {{user_id}} 会转义成 {user_id} 发送，而后面的 {nickname} 会被替换
       "[normal] [CQ:at,qq={{user_id}}] 啊咧？怎么 At 不了 {nickname}？"
     ]
   }
