@@ -18,6 +18,13 @@
       type="text/css"
     />
 
+    <style>
+      code {
+        font-family: 'JetBrains Mono', 'Roboto Mono', 'Monaco', 'Courier New',
+          Courier, 'Microsoft YaHei UI', monospace !important;
+      }
+    </style>
+
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -43,6 +50,8 @@
         auto2top: true,
         coverpage: true,
         onlyCover: true,
+        loadNavbar: true,
+        loadSidebar: true,
         copyCode: {
           buttonText: '📋',
           errorText: '❌',
@@ -55,7 +64,8 @@
 
     <!-- Docsify v4 -->
     <script src="//unpkg.com/docsify@4"></script>
-    <script src="//unpkg.com/prismjs@v1.x/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="//unpkg.com/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="//unpkg.com/prismjs@1.29.0/components/prism-python.min.js"></script>
 
     <script
       src="//unpkg.com/docsify-darklight-theme@latest/dist/index.min.js"

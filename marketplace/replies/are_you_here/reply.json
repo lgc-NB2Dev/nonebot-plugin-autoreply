@@ -1,0 +1,12 @@
+[
+  {
+    "matches": [
+      {
+        "match": "在吗?\\s*(？|\\?)?",
+        "type": "regex",
+        "to_me": true
+      }
+    ],
+    "replies": ["Bot 在哦~"]
+  }
+]
