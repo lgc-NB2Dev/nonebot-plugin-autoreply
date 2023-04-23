@@ -255,6 +255,79 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 ]
 ```
 
+插件提供了一些变量，他们可以被用在 `normal` 和 `array` 类型的消息，以及 `multi` 类型中嵌套的这两个类型的消息中；`plain` 类型的消息则无法使用变量  
+变量使用 `str.format()` 方法替换，所以如果想要转义 `{` 或 `}`，使用 `{{` 或 `}}` 即可
+
+下面是插件提供的变量列表
+
+- `{self_id}` - 机器人 QQ
+- `｛message_id｝` - 消息 ID
+- `{user_id}` - 发送者 QQ
+- `｛nickname｝` - 发送者昵称
+- `｛card｝` - 发送者群名片
+- `｛group_id｝` - 消息来源群号（私聊等为 `None`）
+
+下面放出几个示例，帮助大家更好的理解如何使用变量
+
+```jsonc
+[
+  {
+    "matches": [
+      {
+        "match": "^(@|at|艾特)我$",
+        "type": "regex"
+      }
+    ],
+    "replies": [
+      // 在 normal 类型消息中使用
+      "[normal] At了 [CQ:at,qq={user_id}]",
+
+      // 在 array 类型消息中使用
+      [
+        {
+          "type": "text",
+          "data": {
+            "text": "[array] At了 "
+          }
+        },
+        {
+          "type": "at",
+          "data": {
+            "qq": "{user_id}"
+          }
+        }
+      ],
+
+      // 在 multi 类型消息中使用
+      {
+        "type": "multi",
+        "message": [
+          // 嵌套的 array 类型消息
+          [
+            {
+              "type": "at",
+              "data": {
+                "qq": "{user_id}"
+              }
+            }
+          ],
+
+          // 嵌套的 normal 类型消息
+          "[multi] 我刚刚 At 了一下你哦~ 收到了吗？"
+        ]
+      },
+
+      // 无法在 plain 类型消息中使用，{user_id}、{nickname} 会原样显示
+      "@[plain] [CQ:at,qq={user_id}] 啊咧？怎么 At 不了 {nickname}？",
+
+      // 可以在消息中使用 {{ 和 }} 来转义大括号
+      // 前面的 ｛｛user_id｝｝ 会转义成 {user_id} 发送，而后面的 {nickname} 会被替换
+      "[normal] [CQ:at,qq={{user_id}}] 啊咧？怎么 At 不了 {nickname}？"
+    ]
+  }
+]
+```
+
 ### 常规配置
 
 下方的配置皆为可选，如果不需要可以忽略不配置  

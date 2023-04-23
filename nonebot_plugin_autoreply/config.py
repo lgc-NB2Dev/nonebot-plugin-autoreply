@@ -15,6 +15,7 @@ if not DATA_PATH.exists():
 
 MatchType = Union[str, "MatchModel"]
 ReplyType = Union[str, List["MessageSegmentModel"], "ReplyModel"]
+MessageType = Union[str, List["MessageSegmentModel"], List[ReplyType]]
 
 
 class MatchModel(BaseModel):
@@ -33,7 +34,7 @@ class MessageSegmentModel(BaseModel):
 
 class ReplyModel(BaseModel):
     type: Literal["normal", "plain", "array", "multi"]  # noqa: A003
-    message: Union[str, List[MessageSegmentModel], List[ReplyType]]
+    message: MessageType
     delay: Tuple[int, int] = (0, 0)
 
 

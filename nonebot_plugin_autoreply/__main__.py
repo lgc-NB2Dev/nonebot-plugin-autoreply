@@ -2,7 +2,7 @@ import asyncio
 import random
 import re
 from itertools import starmap
-from typing import Callable, Iterable, List, Optional, Tuple, TypeVar, cast
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, cast
 
 from nonebot import on_command, on_message
 from nonebot.adapters.onebot.v11 import (
@@ -15,6 +15,12 @@ from nonebot.matcher import Matcher
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 from typing_extensions import TypeVarTuple, Unpack
+
+from nonebot_plugin_autoreply.util import (
+    get_var_dict,
+    replace_segment_var,
+    replace_str_var,
+)
 
 from .config import (
     FilterModel,
@@ -115,6 +121,7 @@ async def message_checker(event: MessageEvent, state: T_State) -> bool:
 
 def get_reply_msgs(
     reply: ReplyType,
+    var_dict: Dict[str, Any],
     refuse_multi: bool = False,
 ) -> Tuple[List[Message], Optional[Tuple[int, int]]]:
     if isinstance(reply, str):
@@ -134,24 +141,20 @@ def get_reply_msgs(
         return [Message() + cast(str, msg)], None
 
     if rt == "array":
+        replaced = replace_segment_var(cast(List[MessageSegmentModel], msg), var_dict)
         return [
-            Message(
-                [
-                    MessageSegment(type=x.type, data=x.data)
-                    for x in cast(List[MessageSegmentModel], msg)
-                ],
-            ),
+            Message([MessageSegment(type=x.type, data=x.data) for x in replaced]),
         ], None
 
     if rt == "multi":
         if refuse_multi:
             raise ValueError("Nested `multi` is not allowed")
         return [
-            get_reply_msgs(x, True)[0][0] for x in cast(List[ReplyModel], msg)
+            get_reply_msgs(x, var_dict, True)[0][0] for x in cast(List[ReplyModel], msg)
         ], reply.delay
 
     # default normal
-    return [Message(cast(str, msg))], None
+    return [Message(replace_str_var(cast(str, msg), var_dict))], None
 
 
 autoreply_matcher = on_message(
@@ -162,10 +165,10 @@ autoreply_matcher = on_message(
 
 
 @autoreply_matcher.handle()
-async def _(matcher: Matcher, state: T_State):
+async def _(event: MessageEvent, matcher: Matcher, state: T_State):
     reply: ReplyType = state["reply"]
 
-    msg, delay = get_reply_msgs(reply)
+    msg, delay = get_reply_msgs(reply, get_var_dict(event))
     for m in msg:
         await matcher.send(m)
 
