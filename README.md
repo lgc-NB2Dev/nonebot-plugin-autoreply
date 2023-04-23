@@ -27,7 +27,7 @@ _✨ 自动回复 ✨_
 </a>
 </div>
 
-## 🛒 配置市场
+## 🛒 回复市场
 
 ![market](https://raw.githubusercontent.com/lgc-NB2Dev/readme/main/autoreply/QQ截图20230423192951.png)
 
