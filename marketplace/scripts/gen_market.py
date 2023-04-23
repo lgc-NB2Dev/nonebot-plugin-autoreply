@@ -63,7 +63,7 @@ def main():
             "\n"
             "## 配置内容\n"
             "\n"
-            f"[点击下载](https://autoreply.lgc2333.top/replies/{dir_name}/reply.json)\n"
+            f"[右键点击我，选择 `链接另存为...` 即可下载](https://autoreply.lgc2333.top/replies/{dir_name}/reply.json)\n"
             "\n"
             "```json\n"
             f"{reply}\n"
@@ -72,6 +72,7 @@ def main():
 
         readme_path = MARKET_PATH / f"{dir_name}.md"
         readme_path.write_text(readme, encoding="u8")
+        print(f"OK - {dir_name} - {meta.name}")
 
     SIDEBAR_MD_PATH.write_text("\n".join(sidebar), encoding="u8")
 
