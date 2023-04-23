@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, Generic, List, Literal, Tuple, TypeVar, Union
 
 from nonebot import get_driver
+from nonebot.log import logger
 from pydantic import BaseModel
 
 T = TypeVar("T")
@@ -11,9 +12,6 @@ DATA_PATH = Path.cwd() / "data" / "autoreply"
 if not DATA_PATH.exists():
     DATA_PATH.mkdir(parents=True)
 
-REPLY_JSON_PATH = DATA_PATH / "replies.json"
-if not REPLY_JSON_PATH.exists():
-    REPLY_JSON_PATH.write_text("[]", encoding="u8")
 
 MatchType = Union[str, "MatchModel"]
 ReplyType = Union[str, List["MessageSegmentModel"], "ReplyModel"]
@@ -60,14 +58,39 @@ replies: List[ReplyEntryModel] = []
 config = ConfigModel.parse_obj(get_driver().config)
 
 
-def reload_replies():
+def reload_replies() -> Tuple[int, int]:
     replies.clear()
-    replies.extend(
-        [
-            ReplyEntryModel(**x)
-            for x in json.loads(REPLY_JSON_PATH.read_text(encoding="u8"))
-        ],
+
+    success = 0
+    fail = 0
+
+    for json_path in DATA_PATH.glob("*.json"):
+        file_name = json_path.name
+
+        try:
+            replies.extend(
+                [
+                    ReplyEntryModel(**x)
+                    for x in json.loads(json_path.read_text(encoding="u8"))
+                ],
+            )
+
+        except Exception:
+            logger.opt(colors=True).exception(
+                f"加载回复配置 <y>{file_name}</y> <l><r>失败</r></l>",
+            )
+            fail += 1
+
+        else:
+            logger.opt(colors=True).info(f"加载回复配置 <y>{file_name}</y> <l><g>成功</g></l>")
+            success += 1
+
+    logger.opt(colors=True).info(
+        "加载回复配置完毕，"
+        f"<l><g>成功</g></l> <y>{success}</y> 个，"
+        f"<l><r>失败</r></l> <y>{fail}</y> 个",
     )
+    return success, fail
 
 
 reload_replies()

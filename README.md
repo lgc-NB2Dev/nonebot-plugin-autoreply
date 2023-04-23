@@ -97,8 +97,8 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 
 ### 回复配置
 
-插件的配置文件位于 `data/autoreply/replies.json` 下  
-因为把这种东西写在 env 里会太紧凑不易读，所以我单独弄出来了
+插件的配置文件位于 `data/autoreply` 下  
+在里面新建一个 `json` 后缀文件即可开始配置
 
 请根据下面的注释来编辑配置文件，实际配置文件内不要有注释
 
@@ -285,6 +285,10 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
   </details>
 
 ## 📝 更新日志
+
+### 0.2.5
+
+- 可以加载多个回复 Json
 
 ### 0.2.4
 

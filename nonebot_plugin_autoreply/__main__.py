@@ -11,7 +11,6 @@ from nonebot.adapters.onebot.v11 import (
     MessageEvent,
     MessageSegment,
 )
-from nonebot.log import logger
 from nonebot.matcher import Matcher
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
@@ -179,10 +178,5 @@ reload_matcher = on_command("重载自动回复", permission=SUPERUSER)
 
 @reload_matcher.handle()
 async def _(matcher: Matcher):
-    try:
-        reload_replies()
-    except:
-        logger.exception("重载配置失败")
-        await matcher.finish("重载失败，请检查后台输出")
-    else:
-        await matcher.finish("重载自动回复配置成功~")
+    success, fail = reload_replies()
+    await matcher.finish(f"重载回复配置完毕\n成功 {success} 个，失败 {fail} 个")
