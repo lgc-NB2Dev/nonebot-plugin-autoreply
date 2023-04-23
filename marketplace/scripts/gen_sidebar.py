@@ -1,7 +1,6 @@
 import json
+from dataclasses import dataclass
 from pathlib import Path
-
-from attr import dataclass
 
 REPLIES_PATH = Path(__file__).parent.parent / "replies"
 SIDEBAR_MD_PATH = REPLIES_PATH / "_sidebar.md"
