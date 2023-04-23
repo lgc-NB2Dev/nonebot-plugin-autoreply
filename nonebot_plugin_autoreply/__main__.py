@@ -179,4 +179,4 @@ reload_matcher = on_command("重载自动回复", permission=SUPERUSER)
 @reload_matcher.handle()
 async def _(matcher: Matcher):
     success, fail = reload_replies()
-    await matcher.finish(f"重载回复配置完毕\n成功 {success} 个，失败 {fail} 个")
+    await matcher.finish(f"重载回复配置完毕~\n成功 {success} 个，失败 {fail} 个")
