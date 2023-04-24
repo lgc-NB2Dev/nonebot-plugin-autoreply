@@ -31,7 +31,7 @@ _✨ 自动回复 ✨_
 
 ![market](https://raw.githubusercontent.com/lgc-NB2Dev/readme/main/autoreply/QQ截图20230423192951.png)
 
-[点击进入](https://autoreply.lgc2333.top)
+### [点击进入](https://autoreply.lgc2333.top)
 
 我们的回复配置市场上线啦~  
 在这里，你可以分享你的回复配置，也可以找到其他人分享的回复配置，欢迎各位使用！
