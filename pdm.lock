@@ -120,7 +120,7 @@ dependencies = [
 [metadata]
 lock_version = "4.2"
 groups = ["default"]
-content_hash = "sha256:dc391d991423d8d2b94f23bcef4482054b2edd652901e8c2e1bbbeecf7ac20ab"
+content_hash = "sha256:b142495d1a2ea79da6d768542fba040b7beadc0f65e6d69d9a7fe54de39d9f1d"
 
 [metadata.files]
 "colorama 0.4.6" = [

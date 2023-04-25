@@ -15,8 +15,9 @@ from typing import (
     cast,
 )
 
-from nonebot import on_command, on_message
+from nonebot import on_command, on_message, on_notice
 from nonebot.adapters.onebot.v11 import (
+    Bot,
     GroupMessageEvent,
     Message,
     MessageEvent,
@@ -115,6 +116,12 @@ def check_message(match: MatchModel, event: MessageEvent) -> bool:
     )
 
 
+def check_poke(match: MatchModel, event: PokeNotifyEvent) -> bool:
+    if match.type != "poke":
+        return False
+    return event.is_tome() if match.to_me else True
+
+
 def check_match(match: MatchType, event: Union[MessageEvent, PokeNotifyEvent]) -> bool:
     if isinstance(match, str):
         match = MatchModel(match=match)
@@ -122,7 +129,11 @@ def check_match(match: MatchType, event: Union[MessageEvent, PokeNotifyEvent]) -
     if match.possibility < 1 and random.random() > match.possibility:
         return False
 
-    return check_message(match, event) if isinstance(event, MessageEvent) else True
+    return (
+        check_message(match, event)
+        if isinstance(event, MessageEvent)
+        else check_poke(match, event)
+    )
 
 
 async def message_checker(
@@ -192,18 +203,32 @@ def get_reply_msgs(
     return [Message(replace_str_var(cast(str, msg), var_dict))], None
 
 
-autoreply_matcher = on_message(
+message_matcher = on_message(
+    rule=message_checker,
+    block=config.autoreply_block,
+    priority=config.autoreply_priority,
+)
+
+poke_matcher = on_notice(
     rule=message_checker,
     block=config.autoreply_block,
     priority=config.autoreply_priority,
 )
 
 
-@autoreply_matcher.handle()
-async def _(event: MessageEvent, matcher: Matcher, state: T_State):
+@message_matcher.handle()
+@poke_matcher.handle()
+async def _(
+    bot: Bot,
+    event: Union[MessageEvent, PokeNotifyEvent],
+    matcher: Matcher,
+    state: T_State,
+):
     reply: List[ReplyType] = state["reply"]
 
-    reply_msgs = [get_reply_msgs(x, get_var_dict(event)) for x in reply]
+    var_dict = await get_var_dict(bot, event)
+    reply_msgs = [get_reply_msgs(x, var_dict) for x in reply]
+
     for msgs, delay in reply_msgs:
         for x in msgs:
             await matcher.send(x)

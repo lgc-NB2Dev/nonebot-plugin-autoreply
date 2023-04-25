@@ -36,6 +36,9 @@ _✨ 自动回复 ✨_
 我们的回复配置市场上线啦~  
 在这里，你可以分享你的回复配置，也可以找到其他人分享的回复配置，欢迎各位使用！
 
+_如果大家需要，我可以做一个直接使用指令下载安装市场中回复配置的功能 qwq_  
+_想要的话就提个 issue 吧，没人想要的话就不做了（_
+
 ## 📖 介绍
 
 一个简单的关键词自动回复插件，支持 模糊匹配、完全匹配 与 正则匹配，配置文件高度自定义  
@@ -118,13 +121,17 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
     // 可以不填，默认为 `true`
     "block": true,
 
+    // 该组配置的优先级，越大越高
+    // 可以不填，默认为 1
+    "priority": 1,
+
     // 消息的匹配规则，可以放置多个
     "matches": [
       {
-        // 匹配模式，可选 `full`(完全匹配)、`fuzzy`(模糊匹配)、`regex`(正则匹配)
+        // 匹配模式，可选 `full`(完全匹配)、`fuzzy`(模糊匹配)、`regex`(正则匹配)、`poke`(双击头像戳一戳)
         //
-        // 还有一种特殊的匹配模式 `poke`，这个匹配将在用户双击 Bot 头像 (戳一戳) 时触发
-        // 使用这种匹配时，除了 `possibility` 条件，其他的匹配条件都会被忽略
+        // 使用 `poke` 匹配时，除了 `possibility` 和 `to_me` 条件，其他的匹配条件都会被忽略
+        // 注意：`poke` 会匹配所有戳一戳事件，如果你只想要匹配 Bot 被戳的事件，请将 `to_me` 设为 `true`
         //
         // 可以不填，默认为 `fuzzy`
         "type": "fuzzy",
@@ -138,6 +145,7 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
         "match": "测试",
 
         // 是否需要 at 机器人才能触发（叫机器人昵称也可以）
+        // 当匹配模式为 `poke` 时，只有 被戳 的对象是 Bot，事件才会匹配成功
         // 可以不填，默认为 `false`
         "to_me": false,
 
@@ -273,11 +281,13 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 下面是插件提供的变量列表
 
 - `{self_id}` - 机器人 QQ
-- `{message_id}` - 消息 ID
+- `{message_id}` - 消息 ID _（当 `match` 的 `type` 为 `poke` 时为 `None`）_
 - `{user_id}` - 发送者 QQ
+- `{group_id}` - 消息来源群号 _（私聊等为 `None`）_
+- `{target_id}` - 被戳者 QQ _（仅当 `match` 的 `type` 为 `poke` 时有值，其他情况为 `None`）_
 - `{nickname}` - 发送者昵称
 - `{card}` - 发送者群名片
-- `{group_id}` - 消息来源群号（私聊等为 `None`）
+- `{display_name}` - 发送者显示名称 _（优先群名片，当群名片为空时为昵称）_
 
 下面放出几个示例，帮助大家更好的理解如何使用变量
 
@@ -379,6 +389,18 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
   </details>
 
 ## 📝 更新日志
+
+### 0.2.7
+
+- 新增了配置的 `block` 和 `priority` 属性
+- 新增 `type` 为 `poke` (双击头像，戳一戳) 的 `match`
+- 新增了 `match` 的 `possibility` 属性
+- 新增了 `{display_name}` 变量
+
+### 0.2.6
+
+- 回复中可以使用变量了
+- 新增配置市场
 
 ### 0.2.5
 

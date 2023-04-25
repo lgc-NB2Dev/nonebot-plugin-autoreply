@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-autoreply"
-version = "0.2.6"
+version = "0.2.7"
 description = "A powerful auto reply plugin for NoneBot2"
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
 dependencies = [

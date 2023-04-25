@@ -57,6 +57,7 @@ class FilterModel(BaseModel, Generic[T]):
 
 class ReplyEntryModel(BaseModel):
     block: bool = True
+    priority: int = 1
     # cool_down: Optional[CoolDownModel] = None
     matches: List[MatchType]
     replies: List[ReplyType]
@@ -104,6 +105,7 @@ def reload_replies() -> Tuple[int, int]:
             logger.opt(colors=True).info(f"加载回复配置 <y>{file_name}</y> <l><g>成功</g></l>")
             success += 1
 
+    replies.sort(key=lambda x: x.priority)
     logger.opt(colors=True).info(
         "加载回复配置完毕，"
         f"<l><g>成功</g></l> <y>{success}</y> 个，"
