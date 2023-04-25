@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, Generic, List, Literal, Tuple, TypeVar, Union
+from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, Union
 
 from nonebot import get_driver
 from nonebot.log import logger
@@ -19,8 +19,10 @@ MessageType = Union[str, List["MessageSegmentModel"], List[ReplyType]]
 
 
 class MatchModel(BaseModel):
-    match: str
-    type: Literal["full", "fuzzy", "regex"] = "fuzzy"  # noqa: A003
+    type: Literal["full", "fuzzy", "regex", "poke"] = "fuzzy"  # noqa: A003
+    possibility: float = 1.0
+
+    match: Optional[str] = None
     to_me: bool = False
     ignore_case: bool = True
     strip: bool = True
@@ -43,11 +45,27 @@ class FilterModel(BaseModel, Generic[T]):
     values: List[T]
 
 
+# TODO cool down
+# class CoolDownModel(BaseModel):
+#     type: Literal["user", "group"] = "group"  # noqa: A003
+#     """cd类型，user为每个人的cd，group为每个群的cd"""
+#     time: float
+#     """cd时长，单位秒"""
+#     tip: Optional[str] = None
+#     """正在cd中的提示，None或空字符串为不提示"""
+
+
 class ReplyEntryModel(BaseModel):
+    block: bool = True
+    # cool_down: Optional[CoolDownModel] = None
     matches: List[MatchType]
     replies: List[ReplyType]
     groups: FilterModel[int] = FilterModel(values=[])
     users: FilterModel[int] = FilterModel(values=[])
+
+
+# TODO class ResolvedReplyEntryModel
+# 在配置项载入的之后就规范化配置项模型，减少运行时开销
 
 
 class ConfigModel(BaseModel):

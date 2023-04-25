@@ -2,7 +2,18 @@ import asyncio
 import random
 import re
 from itertools import starmap
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, TypeVar, cast
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from nonebot import on_command, on_message
 from nonebot.adapters.onebot.v11 import (
@@ -10,6 +21,7 @@ from nonebot.adapters.onebot.v11 import (
     Message,
     MessageEvent,
     MessageSegment,
+    PokeNotifyEvent,
 )
 from nonebot.matcher import Matcher
 from nonebot.permission import SUPERUSER
@@ -56,9 +68,12 @@ def check_filter(will_check: FilterModel[T], val: Optional[T]) -> bool:
     return ok
 
 
-def check_match(match: MatchType, event: MessageEvent) -> bool:
-    if isinstance(match, str):
-        match = MatchModel(match=match)
+def check_message(match: MatchModel, event: MessageEvent) -> bool:
+    if match.type == "poke":
+        return False
+
+    if not match.match:
+        raise ValueError("存在 type 不为 poke，且 match 为空的不合法匹配规则")
 
     if match.to_me and (not event.is_tome()):
         return False
@@ -100,9 +115,27 @@ def check_match(match: MatchType, event: MessageEvent) -> bool:
     )
 
 
-async def message_checker(event: MessageEvent, state: T_State) -> bool:
-    group = event.group_id if isinstance(event, GroupMessageEvent) else None
+def check_match(match: MatchType, event: Union[MessageEvent, PokeNotifyEvent]) -> bool:
+    if isinstance(match, str):
+        match = MatchModel(match=match)
 
+    if match.possibility < 1 and random.random() > match.possibility:
+        return False
+
+    return check_message(match, event) if isinstance(event, MessageEvent) else True
+
+
+async def message_checker(
+    event: Union[MessageEvent, PokeNotifyEvent],
+    state: T_State,
+) -> bool:
+    group = (
+        event.group_id
+        if isinstance(event, (GroupMessageEvent, PokeNotifyEvent))
+        else None
+    )
+
+    state_reply = []
     for reply in replies:
         filter_checks = [(reply.groups, group), (reply.users, event.user_id)]
         match_checks = [(x, event) for x in reply.matches]
@@ -113,10 +146,12 @@ async def message_checker(event: MessageEvent, state: T_State) -> bool:
         ):
             continue
 
-        state["reply"] = random.choice(reply.replies)
-        return True
+        state_reply.append(random.choice(reply.replies))
+        if reply.block:
+            break
 
-    return False
+    state["reply"] = state_reply
+    return bool(state_reply)
 
 
 def get_reply_msgs(
@@ -166,11 +201,12 @@ autoreply_matcher = on_message(
 
 @autoreply_matcher.handle()
 async def _(event: MessageEvent, matcher: Matcher, state: T_State):
-    reply: ReplyType = state["reply"]
+    reply: List[ReplyType] = state["reply"]
 
-    msg, delay = get_reply_msgs(reply, get_var_dict(event))
-    for m in msg:
-        await matcher.send(m)
+    reply_msgs = [get_reply_msgs(x, get_var_dict(event)) for x in reply]
+    for msgs, delay in reply_msgs:
+        for x in msgs:
+            await matcher.send(x)
 
         if delay:
             await asyncio.sleep(random.randint(*delay) / 1000)
