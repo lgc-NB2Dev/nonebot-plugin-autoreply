@@ -395,7 +395,7 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
 - 新增了配置的 `block` 和 `priority` 属性
 - 新增 `type` 为 `poke` (双击头像，戳一戳) 的 `match`
 - 新增了 `match` 的 `possibility` 属性
-- 新增了 `{display_name}` 变量
+- 新增了 `{target_id}` 与 `{display_name}` 变量
 
 ### 0.2.6
 
