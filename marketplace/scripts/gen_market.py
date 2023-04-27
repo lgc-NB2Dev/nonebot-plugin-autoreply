@@ -80,7 +80,7 @@ def main():
             "\n"
             "## 配置内容\n"
             "\n"
-            f"[右键点击我，选择 `链接另存为...` 即可下载](https://autoreply.lgc2333.top/replies/{dir_name}/reply.json)\n"
+            f"[右键点击我，选择 `链接另存为...` 即可下载](https://autoreply.lgc2333.top/replies/{dir_name}/{reply_path.name})\n"
             "\n"
             f"```{reply_path.suffix[1:]}\n"
             f"{reply}\n"
