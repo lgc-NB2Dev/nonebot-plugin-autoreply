@@ -5,7 +5,7 @@
 
 ![在](https://img.shields.io/badge/-在-brightgreen?style=flat-square) ![在吗](https://img.shields.io/badge/-在吗-brightgreen?style=flat-square)
 
-> @Bot 在吗 回复
+> @Bot 并带上“在吗”时回复
 
 <hr />
 
@@ -13,7 +13,20 @@
 
 ## 介绍
 
-本回复规则会在用户 `@Bot` 并发送 `在(吗)` 时向用户作回应答
+本回复规则会在
+
+- 用户 `@Bot` 并发送 `在(吗)(？)` / `zai(ma)(?)` 时
+- 用户 `@Bot` 并不带任何参数时
+
+向用户作回应答
+
+## 触发示例
+
+这里假设有一个配置项为 `NICKNAME=["时雨"]`
+
+- `@Bot 在吗`
+- `@Bot zai ma`
+- `时雨在？`
 
 
 ## 配置内容
@@ -22,11 +35,21 @@
 
 ```yml
 - matches:
+    # @Bot 在/在吗/zai ma
     - match: '^(，|,)?\s*(在吗?|zai(\s*ma)?)\s*(？|\?)?$'
       type: regex
       to_me: true
 
+    # 只 @Bot 不带任何文本
+    - match: ''
+      type: full
+      to_me: true
+      allow_plaintext: false
+
   replies:
-    - '{at}Bot在哦~'
+    - '{at}在哦~'
+    - '{at}有什么事吗？'
+    - '{at}需要帮助吗？'
+    - '{at}来了！'
 
 ```
