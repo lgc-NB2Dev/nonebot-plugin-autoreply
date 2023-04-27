@@ -17,11 +17,29 @@
       title="docsify-darklight-theme"
       type="text/css"
     />
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css"
+    />
 
     <style>
       code {
         font-family: 'JetBrains Mono', 'Roboto Mono', 'Monaco', 'Courier New',
           Courier, 'Microsoft YaHei UI', monospace !important;
+      }
+
+      /* 行号 https://github.com/docsifyjs/docsify/issues/771 */
+      .markdown-section pre[data-lang] {
+        overflow: auto !important;
+      }
+
+      .markdown-section pre[data-lang] code {
+        overflow: visible;
+      }
+
+      .line-numbers .line-numbers-rows {
+        border-right: 2px dashed #99999950;
+        padding: 2.2em 0;
       }
     </style>
 
@@ -59,6 +77,18 @@
           errorText: '❌',
           successText: '✅',
         },
+
+        // 行号 https://github.com/docsifyjs/docsify/issues/771
+        markdown: {
+          renderer: {
+            code: (code, lang) => {
+              const cc = document.createElement('code');
+              cc.textContent = code;
+              return `<pre data-lang="${lang}" class="line-numbers language-${lang}">${cc.outerHTML}</pre>`;
+            },
+          },
+        },
+        plugins: [(hook) => hook.doneEach(() => Prism.highlightAll())],
       };
     </script>
 
@@ -66,6 +96,7 @@
 
     <!-- Docsify v4 -->
     <script src="//unpkg.com/docsify@4"></script>
+    <script src="//unpkg.com/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
     <script src="//unpkg.com/prismjs@1.29.0/components/prism-json.min.js"></script>
     <script src="//unpkg.com/prismjs@1.29.0/components/prism-yaml.min.js"></script>
     <script src="//unpkg.com/prismjs@1.29.0/components/prism-python.min.js"></script>
