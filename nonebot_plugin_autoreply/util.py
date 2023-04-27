@@ -1,13 +1,13 @@
-from typing import Any, Dict, Iterable, List, Union
+from typing import Any, Dict, Union, cast
 
 from nonebot.adapters.onebot.v11 import (
     Bot,
     GroupMessageEvent,
+    Message,
     MessageEvent,
+    MessageSegment,
     PokeNotifyEvent,
 )
-
-from .config import MessageSegmentModel
 
 
 async def get_var_dict(
@@ -18,6 +18,7 @@ async def get_var_dict(
     is_group = isinstance(event, GroupMessageEvent)
     is_poke = isinstance(event, PokeNotifyEvent)
 
+    message_id = event.message_id if is_message else None
     user_id = event.user_id
     group_id = event.group_id if is_group or is_poke else None
 
@@ -36,30 +37,20 @@ async def get_var_dict(
         card = sender.card
 
     return {
+        "bs": "{",
+        "be": "}",
         "self_id": event.self_id,
-        "message_id": event.message_id if is_message else None,
+        "message_id": message_id,
         "user_id": user_id,
         "group_id": group_id,
         "target_id": event.target_id if is_poke else None,
         "nickname": nickname,
         "card": card,
         "display_name": card or nickname,
+        "at": MessageSegment.at(user_id),
+        "reply": MessageSegment.reply(message_id) if message_id else None,
     }
 
 
-def replace_str_var(string: str, var_dict: Dict[str, Any]) -> str:
-    return string.format(**var_dict)
-
-
-def replace_segment_var(
-    segments: Iterable[MessageSegmentModel],
-    var_dict: Dict[str, Any],
-) -> List[MessageSegmentModel]:
-    segments = [x.copy(deep=True) for x in segments]
-
-    for seg in segments:
-        for k, v in seg.data.items():
-            if isinstance(v, str):
-                seg.data[k] = replace_str_var(v, var_dict)
-
-    return segments
+def replace_message_var(message: Message, var_dict: Dict[str, Any]) -> Message:
+    return cast(Message, Message.template(message).format_map(var_dict))

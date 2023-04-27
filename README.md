@@ -276,10 +276,12 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 ```
 
 插件提供了一些变量，他们可以被用在 `normal` 和 `array` 类型的消息，以及 `multi` 类型中嵌套的这两个类型的消息中；`plain` 类型的消息则无法使用变量  
-变量使用 `str.format()` 方法替换，所以如果想要转义 `{` 或 `}`，使用 `{{` 或 `}}` 即可
+变量使用 [`MessageTemplate.format_map()`](https://v2.nonebot.dev/docs/tutorial/message#%E4%BD%BF%E7%94%A8%E6%B6%88%E6%81%AF%E6%A8%A1%E6%9D%BF) 方法替换
 
 下面是插件提供的变量列表
 
+- `{bs}` - “`{`”，转义用
+- `{be}` - “`}`”，转义用
 - `{self_id}` - 机器人 QQ
 - `{message_id}` - 消息 ID _（当 `match` 的 `type` 为 `poke` 时为 `None`）_
 - `{user_id}` - 发送者 QQ
@@ -288,6 +290,8 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 - `{nickname}` - 发送者昵称
 - `{card}` - 发送者群名片
 - `{display_name}` - 发送者显示名称 _（优先群名片，当群名片为空时为昵称）_
+- `{at}` - 艾特发送者
+- `{reply}` - 回复发送者 _（当 `match` 的 `type` 为 `poke` 时为 `None`）_
 
 下面放出几个示例，帮助大家更好的理解如何使用变量
 
@@ -342,9 +346,9 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
       // 无法在 plain 类型消息中使用，{user_id}、{nickname} 会原样显示
       "@[plain] [CQ:at,qq={user_id}] 啊咧？怎么 At 不了 {nickname}？",
 
-      // 可以在消息中使用 {{ 和 }} 来转义大括号
+      // 可以在消息中使用 {bs｝ 和 {be} 来转义大括号
       // 前面的 {{user_id}} 会转义成 {user_id} 发送，而后面的 {nickname} 会被替换
-      "[normal] [CQ:at,qq={{user_id}}] 啊咧？怎么 At 不了 {nickname}？"
+      "[normal] [CQ:at,qq={bs}user_id{be}] 啊咧？怎么 At 不了 {nickname}？"
     ]
   }
 ]
@@ -394,6 +398,8 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
 
 - 支持解析 `yaml` 格式配置，会将 `.yml` 和 `.yaml` 的文件作为 `yaml` 格式配置加载
 - 现在会寻找 `data/autoreply` 文件夹下所有子文件夹中的配置并加载
+- 新增变量 `{at}`、`{reply}`
+- 换用 `MessageTemplate` 格式化变量；由于这玩意不支持 `{{` 及 `}}` 转义，所以加入了变量 `{bs}` 和 `{be}`
 
 ### 0.2.7
 

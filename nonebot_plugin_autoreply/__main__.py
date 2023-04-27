@@ -29,11 +29,7 @@ from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 from typing_extensions import TypeVarTuple, Unpack
 
-from nonebot_plugin_autoreply.util import (
-    get_var_dict,
-    replace_segment_var,
-    replace_str_var,
-)
+from nonebot_plugin_autoreply.util import get_var_dict, replace_message_var
 
 from .config import (
     FilterModel,
@@ -187,9 +183,12 @@ def get_reply_msgs(
         return [Message() + cast(str, msg)], None
 
     if rt == "array":
-        replaced = replace_segment_var(cast(List[MessageSegmentModel], msg), var_dict)
+        replaced = cast(List[MessageSegmentModel], msg)
         return [
-            Message([MessageSegment(type=x.type, data=x.data) for x in replaced]),
+            replace_message_var(
+                Message([MessageSegment(type=x.type, data=x.data) for x in replaced]),
+                var_dict,
+            ),
         ], None
 
     if rt == "multi":
@@ -200,7 +199,7 @@ def get_reply_msgs(
         ], reply.delay
 
     # default normal
-    return [Message(replace_str_var(cast(str, msg), var_dict))], None
+    return [replace_message_var(Message(cast(str, msg)), var_dict)], None
 
 
 message_matcher = on_message(
