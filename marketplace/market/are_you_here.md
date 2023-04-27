@@ -22,16 +22,11 @@
 
 ```yml
 - matches:
-    - match: ^(在吗?|zai(\s*ma)?)\s*(？|\?)?$
+    - match: '^(，|,)?\s*(在吗?|zai(\s*ma)?)\s*(？|\?)?$'
       type: regex
       to_me: true
 
   replies:
-    - - type: at
-        data:
-          qq: '{user_id}'
-      - type: text
-        data:
-          text: Bot 在哦~
+    - '{at}Bot在哦~'
 
 ```
