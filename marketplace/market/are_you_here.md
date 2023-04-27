@@ -22,7 +22,7 @@
 
 ```yml
 - matches:
-    - match: 在吗?\s*(？|\?)?
+    - match: ^(在吗?|zai(\s*ma)?)\s*(？|\?)?$
       type: regex
       to_me: true
 
