@@ -3,9 +3,7 @@ import random
 import re
 from itertools import starmap
 from typing import (
-    Any,
     Callable,
-    Dict,
     Iterable,
     List,
     Optional,
@@ -29,7 +27,7 @@ from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 from typing_extensions import TypeVarTuple, Unpack
 
-from nonebot_plugin_autoreply.util import get_var_dict, replace_message_var
+from nonebot_plugin_autoreply.util import VarDictType, get_var_dict, replace_message_var
 
 from .config import (
     FilterModel,
@@ -163,7 +161,7 @@ async def message_checker(
 
 def get_reply_msgs(
     reply: ReplyType,
-    var_dict: Dict[str, Any],
+    var_dict: VarDictType,
     refuse_multi: bool = False,
 ) -> Tuple[List[Message], Optional[Tuple[int, int]]]:
     if isinstance(reply, str):
@@ -183,20 +181,29 @@ def get_reply_msgs(
         return [Message() + cast(str, msg)], None
 
     if rt == "array":
-        replaced = cast(List[MessageSegmentModel], msg)
-        return [
-            replace_message_var(
-                Message([MessageSegment(type=x.type, data=x.data) for x in replaced]),
-                var_dict,
-            ),
-        ], None
+        return (
+            [
+                replace_message_var(
+                    Message(
+                        MessageSegment(type=x.type, data=x.data)
+                        for x in cast(List[MessageSegmentModel], msg)
+                    ),
+                    var_dict,
+                ),
+            ],
+            None,
+        )
 
     if rt == "multi":
         if refuse_multi:
             raise ValueError("Nested `multi` is not allowed")
-        return [
-            get_reply_msgs(x, var_dict, True)[0][0] for x in cast(List[ReplyModel], msg)
-        ], reply.delay
+        return (
+            [
+                get_reply_msgs(x, var_dict, True)[0][0]
+                for x in cast(List[ReplyModel], msg)
+            ],
+            reply.delay,
+        )
 
     # default normal
     return [replace_message_var(Message(cast(str, msg)), var_dict)], None

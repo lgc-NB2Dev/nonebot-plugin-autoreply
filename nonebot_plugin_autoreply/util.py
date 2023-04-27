@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union, cast
+from typing import Any, Dict, Tuple, Union, cast
 
 from nonebot.adapters.onebot.v11 import (
     Bot,
@@ -9,11 +9,13 @@ from nonebot.adapters.onebot.v11 import (
     PokeNotifyEvent,
 )
 
+VarDictType = Tuple[Dict[str, Any], Dict[str, Any]]
+
 
 async def get_var_dict(
     bot: Bot,
     event: Union[MessageEvent, PokeNotifyEvent],
-) -> Dict[str, Any]:
+) -> VarDictType:
     is_message = isinstance(event, MessageEvent)
     is_group = isinstance(event, GroupMessageEvent)
     is_poke = isinstance(event, PokeNotifyEvent)
@@ -36,7 +38,7 @@ async def get_var_dict(
         nickname = sender.nickname
         card = sender.card
 
-    return {
+    normal_var = {
         "bs": "{",
         "be": "}",
         "self_id": event.self_id,
@@ -47,10 +49,25 @@ async def get_var_dict(
         "nickname": nickname,
         "card": card,
         "display_name": card or nickname,
+    }
+    seg_var = {
         "at": MessageSegment.at(user_id),
         "reply": MessageSegment.reply(message_id) if message_id else None,
     }
+    return normal_var, seg_var
 
 
-def replace_message_var(message: Message, var_dict: Dict[str, Any]) -> Message:
-    return cast(Message, Message.template(message).format_map(var_dict))
+def replace_message_var(message: Message, var_dict: VarDictType) -> Message:
+    normal_var, seg_var = var_dict
+    message = cast(
+        Message,
+        Message.template(message).format_map({**normal_var, **seg_var}),
+    )
+
+    for seg in message:
+        if not seg.is_text():
+            for k, v in seg.data.items():
+                if isinstance(v, str):
+                    seg.data[k] = v.format(**normal_var)
+
+    return message
