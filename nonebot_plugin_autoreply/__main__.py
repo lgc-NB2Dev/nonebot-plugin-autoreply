@@ -67,7 +67,7 @@ def check_message(match: MatchModel, event: MessageEvent) -> bool:
     if match.type == "poke":
         return False
 
-    if not match.match:
+    if match.match is None:
         raise ValueError("存在 type 不为 poke，且 match 为空的不合法匹配规则")
 
     if match.to_me and (not event.is_tome()):

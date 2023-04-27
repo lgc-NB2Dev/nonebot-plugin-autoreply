@@ -1,7 +1,17 @@
 - matches:
+    # @Bot 在/在吗/zai ma
     - match: '^(，|,)?\s*(在吗?|zai(\s*ma)?)\s*(？|\?)?$'
       type: regex
       to_me: true
 
+    # 只 @Bot 不带任何文本
+    - match: ''
+      type: full
+      to_me: true
+      allow_plaintext: false
+
   replies:
-    - '{at}Bot在哦~'
+    - '{at}在哦~'
+    - '{at}有什么事吗？'
+    - '{at}需要帮助吗？'
+    - '{at}来了！'
