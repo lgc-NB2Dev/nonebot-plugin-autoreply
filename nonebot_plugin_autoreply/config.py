@@ -1,7 +1,19 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, Union
+from typing import (
+    Any,
+    Dict,
+    Generic,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
+import yaml
 from nonebot import get_driver
 from nonebot.log import logger
 from pydantic import BaseModel
@@ -12,6 +24,7 @@ DATA_PATH = Path.cwd() / "data" / "autoreply"
 if not DATA_PATH.exists():
     DATA_PATH.mkdir(parents=True)
 
+ALLOWED_SUFFIXES = (".json", ".yml", ".yaml")
 
 MatchType = Union[str, "MatchModel"]
 ReplyType = Union[str, List["MessageSegmentModel"], "ReplyModel"]
@@ -78,22 +91,37 @@ replies: List[ReplyEntryModel] = []
 config = ConfigModel.parse_obj(get_driver().config)
 
 
+def iter_config_path(root_path: Path = DATA_PATH) -> Iterator[Path]:
+    for path in root_path.iterdir():
+        if path.is_dir():
+            yield from iter_config_path(path)
+
+        if path.is_file() and (path.suffix in ALLOWED_SUFFIXES):
+            yield path
+
+
+def load_config(path: Path) -> List[ReplyEntryModel]:
+    content = path.read_text(encoding="u8")
+
+    if path.suffix in (".yml", ".yaml"):
+        obj: list = yaml.load(content, Loader=yaml.FullLoader)
+    else:
+        obj: list = json.loads(content)
+
+    return [ReplyEntryModel(**x) for x in obj]
+
+
 def reload_replies() -> Tuple[int, int]:
     replies.clear()
 
     success = 0
     fail = 0
 
-    for json_path in DATA_PATH.glob("*.json"):
-        file_name = json_path.name
+    for path in iter_config_path():
+        file_name = path.name
 
         try:
-            replies.extend(
-                [
-                    ReplyEntryModel(**x)
-                    for x in json.loads(json_path.read_text(encoding="u8"))
-                ],
-            )
+            replies.extend(load_config(path))
 
         except Exception:
             logger.opt(colors=True).exception(

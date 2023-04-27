@@ -20,18 +20,18 @@
 
 [右键点击我，选择 `链接另存为...` 即可下载](https://autoreply.lgc2333.top/replies/are_you_here/reply.json)
 
-```json
-[
-  {
-    "matches": [
-      {
-        "match": "在吗?\\s*(？|\\?)?",
-        "type": "regex",
-        "to_me": true
-      }
-    ],
-    "replies": ["Bot 在哦~"]
-  }
-]
+```yml
+- matches:
+    - match: 在吗?\s*(？|\?)?
+      type: regex
+      to_me: true
+
+  replies:
+    - - type: at
+        data:
+          qq: '{user_id}'
+      - type: text
+        data:
+          text: Bot 在哦~
 
 ```

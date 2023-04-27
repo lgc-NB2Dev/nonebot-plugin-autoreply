@@ -7,6 +7,8 @@ MARKET_PATH = ROOT_PATH / "market"
 REPLIES_PATH = ROOT_PATH / "replies"
 SIDEBAR_MD_PATH = MARKET_PATH / "_sidebar.md"
 
+ALLOWED_SUFFIXES = (".json", ".yml", ".yaml")
+
 
 @dataclass
 class ReplyMeta:
@@ -15,6 +17,16 @@ class ReplyMeta:
     author: str
     author_link: str
     tags: list[str]
+
+
+def find_reply_file(path: Path) -> Path:
+    for suffix in ALLOWED_SUFFIXES:
+        file_path = path / f"reply{suffix}"
+
+        if file_path.exists():
+            return file_path
+
+    raise ValueError
 
 
 def main():
@@ -33,7 +45,7 @@ def main():
         dir_name = path.name
 
         meta_path = path / "meta.json"
-        reply_path = path / "reply.json"
+        reply_path = find_reply_file(path)
         info_readme_path = path / "info.md"
 
         meta = ReplyMeta(**json.loads(meta_path.read_text(encoding="u8")))
@@ -70,7 +82,7 @@ def main():
             "\n"
             f"[右键点击我，选择 `链接另存为...` 即可下载](https://autoreply.lgc2333.top/replies/{dir_name}/reply.json)\n"
             "\n"
-            "```json\n"
+            f"```{reply_path.suffix[1:]}\n"
             f"{reply}\n"
             "```"
         )

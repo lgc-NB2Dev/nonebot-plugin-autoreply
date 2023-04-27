@@ -18,7 +18,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Run Script
         run: |
-          python ./marketplace/scripts/gen_market.py
+          sh marketplace/scripts/action.sh
       - name: Push
         run: |
           git config user.name github-actions[bot]

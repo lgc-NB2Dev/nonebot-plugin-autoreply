@@ -110,7 +110,7 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 ### 回复配置
 
 插件的配置文件位于 `data/autoreply` 下  
-在里面新建一个 `json` 后缀文件即可开始配置
+在里面新建一个 `yml` 或 `json` 后缀文件即可开始配置
 
 请根据下面的注释来编辑配置文件，实际配置文件内不要有注释
 
@@ -389,6 +389,11 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
   </details>
 
 ## 📝 更新日志
+
+### 0.2.8
+
+- 支持解析 `yaml` 格式配置，会将 `.yml` 和 `.yaml` 的文件作为 `yaml` 格式配置加载
+- 现在会寻找 `data/autoreply` 文件夹下所有子文件夹中的配置并加载
 
 ### 0.2.7
 

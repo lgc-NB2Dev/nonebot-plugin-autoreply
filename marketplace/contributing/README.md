@@ -8,7 +8,7 @@
 
 3. 在你新创建的文件夹内，新建下述文件
 
-   - `reply.json` - 回复配置本体
+   - `reply.json` / `reply.yml` / `reply.yaml`- 回复配置本体
 
    - `meta.json` - 该回复配置的元信息，具体内容：
 
