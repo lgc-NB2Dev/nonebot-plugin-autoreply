@@ -91,9 +91,14 @@ def main():
             "\n"
             f"[右键点击我，选择 “链接另存为...” 即可下载](https://autoreply.lgc2333.top/replies/{dir_name}/{reply_path.name})\n"
             "\n"
+            "<details>\n"
+            "<summary>点击展开</summary>\n"
+            "\n"
             f"```{reply_path.suffix[1:]}\n"
             f"{reply}\n"
             "```"
+            "\n"
+            "</details>"
         )
 
         sidebar.append(

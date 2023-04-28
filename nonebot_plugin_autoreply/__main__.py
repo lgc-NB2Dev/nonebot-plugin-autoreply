@@ -233,6 +233,7 @@ async def _(
 ):
     reply: List[ReplyType] = state["reply"]
 
+    # TODO 正则变量替换
     var_dict = await get_var_dict(bot, event)
     reply_msgs: List[ReplyMessagesType] = await asyncio.gather(
         *(get_reply_msgs(x, var_dict) for x in reply),
