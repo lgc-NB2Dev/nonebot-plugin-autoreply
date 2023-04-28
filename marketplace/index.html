@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>AutoReply 回复市场</title>
+    <title>AutoReply 文档站</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="description" content="Description" />
     <meta
@@ -23,9 +23,20 @@
     />
 
     <style>
+      :root {
+        /* 字体 */
+        --codeFontFamily: 'JetBrains Mono', 'Roboto Mono', 'Monaco',
+          'Courier New', Courier, 'Microsoft YaHei UI', monospace !important;
+
+        /* Tab */
+        --docsifytabs-border-color: var(--border-color);
+        --docsifytabs-tab-background: var(--background);
+        --docsifytabs-tab-color: var(--text-color);
+        --docsifytabs-tab-color--active: var(--accent);
+      }
+
       code {
-        font-family: 'JetBrains Mono', 'Roboto Mono', 'Monaco', 'Courier New',
-          Courier, 'Microsoft YaHei UI', monospace !important;
+        font-family: var(--codeFontFamily) !important;
       }
 
       /* 行号 https://github.com/docsifyjs/docsify/issues/771 */
@@ -64,7 +75,7 @@
 
     <script>
       window.$docsify = {
-        name: 'AutoReply 回复市场',
+        name: 'AutoReply 文档站',
         repo: 'https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply',
         auto2top: true,
         coverpage: true,
@@ -72,10 +83,19 @@
         loadNavbar: true,
         loadSidebar: true,
         subMaxLevel: 2,
+
         copyCode: {
           buttonText: '📋',
           errorText: '❌',
           successText: '✅',
+        },
+
+        tabs: {
+          theme: 'material',
+        },
+
+        progress: {
+          position: 'bottom',
         },
 
         // 行号 https://github.com/docsifyjs/docsify/issues/771
@@ -108,5 +128,7 @@
 
     <script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
     <script src="//unpkg.com/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+    <script src="//unpkg.com/docsify-tabs@1"></script>
+    <script src="//unpkg.com/docsify-progress@latest/dist/progress.js"></script>
   </body>
 </html>

@@ -50,7 +50,8 @@ class MessageSegmentModel(BaseModel):
 class ReplyModel(BaseModel):
     type: Literal["normal", "plain", "array", "multi"]  # noqa: A003
     message: MessageType
-    delay: Tuple[int, int] = (0, 0)
+    shuffle: bool = False
+    delay: Union[Tuple[int, int], int] = (0, 0)
 
 
 class FilterModel(BaseModel, Generic[T]):
@@ -135,9 +136,7 @@ def reload_replies() -> Tuple[int, int]:
 
     replies.sort(key=lambda x: x.priority)
     logger.opt(colors=True).info(
-        "加载回复配置完毕，"
-        f"<l><g>成功</g></l> <y>{success}</y> 个，"
-        f"<l><r>失败</r></l> <y>{fail}</y> 个",
+        f"加载回复配置完毕，<l>成功 <g>{success}</g> 个，失败 <r>{fail}</r> 个</l>",
     )
     return success, fail
 

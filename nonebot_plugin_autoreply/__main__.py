@@ -159,17 +159,20 @@ async def message_checker(
     return bool(state_reply)
 
 
-def get_reply_msgs(
+ReplyMessagesType = Tuple[List[Message], Optional[Tuple[int, int]]]
+
+
+async def get_reply_msgs(
     reply: ReplyType,
     var_dict: VarDictType,
     refuse_multi: bool = False,
-) -> Tuple[List[Message], Optional[Tuple[int, int]]]:
+) -> ReplyMessagesType:
     if isinstance(reply, str):
-        str_is_plain = reply.startswith("@")
-        if str_is_plain:
+        is_plain = reply.startswith("@")
+        if is_plain:
             reply = reply[1:]
 
-        reply = ReplyModel(type="plain" if str_is_plain else "normal", message=reply)
+        reply = ReplyModel(type="plain" if is_plain else "normal", message=reply)
 
     elif isinstance(reply, list):
         reply = ReplyModel(type="array", message=reply)
@@ -178,35 +181,33 @@ def get_reply_msgs(
     msg = reply.message
 
     if rt == "plain":
-        return [Message() + cast(str, msg)], None
+        msg = cast(str, msg)
+        return [Message() + msg], None
 
     if rt == "array":
-        return (
-            [
-                replace_message_var(
-                    Message(
-                        MessageSegment(type=x.type, data=x.data)
-                        for x in cast(List[MessageSegmentModel], msg)
-                    ),
-                    var_dict,
-                ),
-            ],
-            None,
-        )
+        msg = cast(List[MessageSegmentModel], msg)
+        msg = Message(MessageSegment(type=x.type, data=x.data) for x in msg)
+        msg = await replace_message_var(msg, var_dict)
+        return [msg], None
 
     if rt == "multi":
         if refuse_multi:
             raise ValueError("Nested `multi` is not allowed")
-        return (
-            [
-                get_reply_msgs(x, var_dict, True)[0][0]
-                for x in cast(List[ReplyModel], msg)
-            ],
-            reply.delay,
-        )
+
+        delay = reply.delay
+        if isinstance(delay, int):
+            delay = (delay, delay)
+
+        msg = cast(List[ReplyModel], msg)
+        msgs = [(await get_reply_msgs(x, var_dict, True))[0][0] for x in msg]
+        if reply.shuffle:
+            random.shuffle(msgs)
+
+        return msgs, delay
 
     # default normal
-    return [replace_message_var(Message(cast(str, msg)), var_dict)], None
+    msg = cast(str, msg)
+    return [await replace_message_var(Message(msg), var_dict)], None
 
 
 message_matcher = on_message(
@@ -233,14 +234,19 @@ async def _(
     reply: List[ReplyType] = state["reply"]
 
     var_dict = await get_var_dict(bot, event)
-    reply_msgs = [get_reply_msgs(x, var_dict) for x in reply]
+    reply_msgs: List[ReplyMessagesType] = await asyncio.gather(
+        *(get_reply_msgs(x, var_dict) for x in reply),
+    )
 
-    for msgs, delay in reply_msgs:
+    for msgs, delay_tuple in reply_msgs:
         for x in msgs:
             await matcher.send(x)
 
-        if delay:
-            await asyncio.sleep(random.randint(*delay) / 1000)
+        if delay_tuple:
+            d_min, d_max = delay_tuple
+            delay = d_min if d_min == d_max else random.randint(d_min, d_max)
+            delay /= 1000
+            await asyncio.sleep(delay)
 
 
 reload_matcher = on_command("重载自动回复", permission=SUPERUSER)

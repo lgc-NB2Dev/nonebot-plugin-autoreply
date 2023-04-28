@@ -1,4 +1,4 @@
-# AutoReply 回复市场
+# AutoReply 文档站
 
-[贡献指南](contributing/)
-[浏览市场](market/)
+[配置文档](configuring/)
+[回复市场](market/replies/)

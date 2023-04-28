@@ -1,5 +1,7 @@
 from typing import Any, Dict, Tuple, Union, cast
 
+from anyio import Path
+from nonebot.adapters.onebot.utils import f2s
 from nonebot.adapters.onebot.v11 import (
     Bot,
     GroupMessageEvent,
@@ -57,7 +59,7 @@ async def get_var_dict(
     return normal_var, seg_var
 
 
-def replace_message_var(message: Message, var_dict: VarDictType) -> Message:
+async def replace_message_var(message: Message, var_dict: VarDictType) -> Message:
     normal_var, seg_var = var_dict
     message = cast(
         Message,
@@ -69,5 +71,10 @@ def replace_message_var(message: Message, var_dict: VarDictType) -> Message:
             for k, v in seg.data.items():
                 if isinstance(v, str):
                     seg.data[k] = v.format(**normal_var)
+
+        if seg.type in ("image", "record"):
+            file = seg.data.get("file")
+            if isinstance(file, str) and file.startswith("file:///"):
+                seg.data["file"] = f2s(await Path(file[8:]).read_bytes())
 
     return message

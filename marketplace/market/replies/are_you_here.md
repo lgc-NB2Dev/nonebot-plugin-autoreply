@@ -29,7 +29,7 @@
 
 ## 配置内容
 
-[右键点击我，选择 `链接另存为...` 即可下载](https://autoreply.lgc2333.top/replies/are_you_here/reply.yml)
+[右键点击我，选择 “链接另存为...” 即可下载](https://autoreply.lgc2333.top/replies/are_you_here/reply.yml)
 
 ```yml
 - matches:

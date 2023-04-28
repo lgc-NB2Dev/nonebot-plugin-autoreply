@@ -1,4 +1,4 @@
 <!-- markdownlint-disable MD041 -->
 
-- [贡献指南](contributing/)
+- [配置文档](configuring/)
 - [回复市场](market/)
