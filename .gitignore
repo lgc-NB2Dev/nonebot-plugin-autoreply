@@ -173,3 +173,5 @@ cython_debug/
 testnb2/
 .idea/
 .pdm-python
+all.log
+error.log

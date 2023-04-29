@@ -1,12 +1,18 @@
 import json
+import logging
 from dataclasses import dataclass
 from pathlib import Path
+
+from cn_sort import sort_text_list
+
+logging.disable(999)
 
 ROOT_PATH = Path(__file__).parent.parent
 REPLIES_PATH = ROOT_PATH / "replies"
 REPLIES_INDEX_PATH = ROOT_PATH / "replies" / "index.json"
 MARKET_ROOT_PATH = ROOT_PATH / "market"
 MARKET_REPLY_PATH = MARKET_ROOT_PATH / "replies"
+MARKET_LIST_README_PATH = MARKET_REPLY_PATH / "README.md"
 SIDEBAR_MD_PATH = MARKET_ROOT_PATH / "_sidebar.md"
 
 ALLOWED_SUFFIXES = (".json", ".yml", ".yaml")
@@ -35,20 +41,8 @@ def main():
     reply_paths = [x for x in REPLIES_PATH.iterdir() if x.is_dir()]
 
     reply_index = []
-    main_readme = [
-        "<!-- markdownlint-disable -->",
-        "# 市场列表\n",
-        "这里可以看到大家分享的回复配置！\n",
-        "想提交自己的回复？来看看 [贡献指南](market/contributing)！\n",
-        "| 名称 | 作者 | 介绍 | 标签 |",
-        "| :- | :- | :- | :- |",
-    ]
-    sidebar = [
-        "<!-- markdownlint-disable -->",
-        "- [回复市场](market/)",
-        "  - [贡献指南](market/contributing)",
-        "  - [市场列表](market/replies/)",
-    ]
+
+    md_entries: dict[str, tuple[str, str]] = {}
 
     for path in reply_paths:
         dir_name = path.name
@@ -101,28 +95,47 @@ def main():
             "</details>"
         )
 
-        sidebar.append(
-            f'    - [{meta.name}](market/replies/{dir_name} "{meta.name} | AutoReply 回复市场")',
-        )
+        info_url = f"market/replies/{dir_name}"
         br_desc = meta.desc.replace("\n", "<br />")
-        main_readme.append(
-            f"| [{meta.name}](market/replies/{dir_name}) "
+
+        sidebar_md = f'    - [{meta.name}]({info_url} "{meta.name} | AutoReply 回复市场")'
+        market_list_md = (
+            f"| [{meta.name}]({info_url}) "
             f"| [{meta.author}]({meta.author_link}) "
             f"| {br_desc} "
-            f"| {tags} |",
+            f"| {tags} |"
         )
 
         reply_index.append(
             {"dir": dir_name, "filename": reply_path.name, **meta.__dict__},
         )
+        md_entries[meta.name] = (sidebar_md, market_list_md)
         readme_path = MARKET_REPLY_PATH / f"{dir_name}.md"
         readme_path.write_text(readme, encoding="u8")
-        main_readme_path = MARKET_REPLY_PATH / "README.md"
-        main_readme_path.write_text("\n".join(main_readme), encoding="u8")
-
         print(f"OK - {dir_name} - {meta.name}")
 
-    SIDEBAR_MD_PATH.write_text("\n".join(sidebar), encoding="u8")
+    market_list_md_li = [
+        "<!-- markdownlint-disable -->",
+        "# 市场列表\n",
+        "这里可以看到大家分享的回复配置！\n",
+        "想提交自己的回复？来看看 [贡献指南](market/contributing)！\n",
+        "| 名称 | 作者 | 介绍 | 标签 |",
+        "| :- | :- | :- | :- |",
+    ]
+    sidebar_md_li = [
+        "<!-- markdownlint-disable -->",
+        "- [回复市场](market/)",
+        "  - [贡献指南](market/contributing)",
+        "  - [市场列表](market/replies/)",
+    ]
+
+    for name in sort_text_list(md_entries.keys()):
+        md_side, md_market = md_entries[name]
+        sidebar_md_li.append(md_side)
+        market_list_md_li.append(md_market)
+
+    MARKET_LIST_README_PATH.write_text("\n".join(market_list_md_li), encoding="u8")
+    SIDEBAR_MD_PATH.write_text("\n".join(sidebar_md_li), encoding="u8")
     # REPLIES_INDEX_PATH.write_text(json.dumps(reply_index), encoding="u8")
 
 
