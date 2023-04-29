@@ -1,5 +1,5 @@
 - matches:
-    - match: '(我是(菜(鸡|逼|b)|废物|fw|傻逼|sb))|我好菜|太强了|tql|大佬|带带我'
+    - match: '(我是(菜(鸡|逼|b)|废物|fw|fvv|five|傻逼|sb))|我好菜|太强了|tql|大佬|带带我'
       type: regex
       possibility: 0.5
 
