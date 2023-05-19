@@ -22,6 +22,8 @@ async def get_var_dict(
     is_group = isinstance(event, GroupMessageEvent)
     is_poke = isinstance(event, PokeNotifyEvent)
 
+    message = event.get_message() if is_message else None
+    plaintext = event.get_plaintext() if is_message else None
     message_id = event.message_id if is_message else None
     user_id = event.user_id
     group_id = event.group_id if is_group or is_poke else None
@@ -51,10 +53,12 @@ async def get_var_dict(
         "nickname": nickname,
         "card": card,
         "display_name": card or nickname,
+        "plaintext": plaintext,
     }
     seg_var = {
         "at": MessageSegment.at(user_id),
         "reply": MessageSegment.reply(message_id) if message_id else None,
+        "message": message,
     }
     return normal_var, seg_var
 

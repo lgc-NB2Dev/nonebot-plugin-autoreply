@@ -32,7 +32,14 @@ MessageType = Union[str, List["MessageSegmentModel"], List[ReplyType]]
 
 
 class MatchModel(BaseModel):
-    type: Literal["full", "fuzzy", "regex", "poke"] = "fuzzy"  # noqa: A003
+    type: Literal[  # noqa: A003
+        "full",
+        "fuzzy",
+        "startswith",
+        "endswith",
+        "regex",
+        "poke",
+    ] = "fuzzy"
     possibility: float = 1.0
 
     match: Optional[str] = None

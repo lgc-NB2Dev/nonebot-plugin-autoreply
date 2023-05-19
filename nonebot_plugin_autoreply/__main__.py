@@ -3,7 +3,9 @@ import random
 import re
 from itertools import starmap
 from typing import (
+    Any,
     Callable,
+    Dict,
     Iterable,
     List,
     Optional,
@@ -45,33 +47,64 @@ T = TypeVar("T")
 TArgs = TypeVarTuple("TArgs")
 
 
+# 感谢 nb2 群内 Bryan不可思议 佬的帮助！！
 def check_list(
-    function: Callable[[Unpack[TArgs]], bool],
+    function: Callable[
+        [Unpack[TArgs]],
+        Union[
+            bool,
+            Tuple[bool, Optional[Dict[str, Any]]],
+        ],
+    ],
     will_check: Iterable[Tuple[Unpack[TArgs]]],
     is_any: bool = False,
-) -> bool:
-    # 感谢 nb2 群内 Bryan不可思议 佬的帮助！！
-    iterator = starmap(function, will_check)
-    return any(iterator) if is_any else all(iterator)
+) -> Tuple[bool, Optional[Dict[str, Any]]]:
+    var_dict_total = {}
+
+    for val in starmap(function, will_check):
+        if not isinstance(val, tuple):
+            val = val, None
+
+        ok, var_d = val
+
+        # any，任意一个为 True 就返回 True
+        if is_any and ok:
+            return val
+
+        if not is_any:
+            # all，有一个不为 True 就返回 False
+            if not ok:
+                return False, None
+
+            # 合并 var_dict
+            if var_d:
+                var_dict_total.update(var_d)
+
+    # any，循环结束代表所有都是 False，返回 False
+    if is_any:
+        return False, None
+
+    # all，循环结束代表所有都是 True，返回 True
+    return True, var_dict_total
 
 
 def check_filter(will_check: FilterModel[T], val: Optional[T]) -> bool:
-    # 判断黑名单 值不在列表中ok
-    ok = val not in will_check.values
-    if will_check.type == "white":  # 白名单则反过来
-        ok = not ok
-    return ok
+    ok = val not in will_check.values  # 判断黑名单 值不在列表中 ok
+    return (not ok) if will_check.type == "white" else ok  # 白名单则反过来
 
 
-def check_message(match: MatchModel, event: MessageEvent) -> bool:
+def check_message(
+    match: MatchModel,
+    event: MessageEvent,
+) -> Tuple[bool, Optional[Dict[str, Any]]]:
     if match.type == "poke":
-        return False
+        return False, None
 
     if match.match is None:
         raise ValueError("存在 type 不为 poke，且 match 为空的不合法匹配规则")
 
     if match.to_me and (not event.is_tome()):
-        return False
+        return False, None
 
     msg_str = str(event.message)
     msg_plaintext = event.message.extract_plain_text()
@@ -83,14 +116,20 @@ def check_message(match: MatchModel, event: MessageEvent) -> bool:
 
     if match.type == "regex":
         flag = re.I if match.ignore_case else 0
-        return bool(
-            (re.search(match_template, msg_str, flag))
-            or (
-                re.search(match_template, msg_plaintext, flag)
-                if match.allow_plaintext
-                else False
-            ),
-        )
+        match_obj = re.search(match_template, msg_str, flag)
+        if (not match_obj) and match.allow_plaintext:
+            match_obj = re.search(match_template, msg_plaintext, flag)
+
+        if match_obj:
+            var_dict = {}
+            var_dict["v0"] = match_obj.string
+            var_dict.update(
+                {f"v{i + 1}": str(x or "") for i, x in enumerate(match_obj.groups())},
+            )
+            var_dict.update({k: str(v or "") for k, v in match_obj.groupdict().items()})
+            return True, var_dict
+
+        return False, None
 
     if match.ignore_case:
         # regex 匹配已经处理过了，这边不需要管
@@ -98,15 +137,49 @@ def check_message(match: MatchModel, event: MessageEvent) -> bool:
         match_template = match_template.lower()
 
     if match.type == "full":
-        return (msg_str == match_template) or (
-            msg_plaintext == match_template if match.allow_plaintext else False
+        return (
+            (
+                (msg_str == match_template)
+                or (msg_plaintext == match_template if match.allow_plaintext else False)
+            ),
+            None,
+        )
+
+    if match.type == "startswith":
+        return (
+            (
+                msg_str.startswith(match_template)
+                or (
+                    msg_plaintext.startswith(match_template)
+                    if match.allow_plaintext
+                    else False
+                )
+            ),
+            None,
+        )
+
+    if match.type == "endswith":
+        return (
+            (
+                msg_str.endswith(match_template)
+                or (
+                    msg_plaintext.endswith(match_template)
+                    if match.allow_plaintext
+                    else False
+                )
+            ),
+            None,
         )
 
     # default fuzzy
     if (not msg_str) or (match.allow_plaintext and (not msg_plaintext)):
-        return False
-    return (match_template in msg_str) or (
-        (match_template in msg_plaintext) if match.allow_plaintext else False
+        return False, None
+    return (
+        (
+            (match_template in msg_str)
+            or ((match_template in msg_plaintext) if match.allow_plaintext else False)
+        ),
+        None,
     )
 
 
@@ -116,17 +189,20 @@ def check_poke(match: MatchModel, event: PokeNotifyEvent) -> bool:
     return event.is_tome() if match.to_me else True
 
 
-def check_match(match: MatchType, event: Union[MessageEvent, PokeNotifyEvent]) -> bool:
+def check_match(
+    match: MatchType,
+    event: Union[MessageEvent, PokeNotifyEvent],
+) -> Tuple[bool, Optional[Dict[str, Any]]]:
     if isinstance(match, str):
         match = MatchModel(match=match)
 
     if match.possibility < 1 and random.random() > match.possibility:
-        return False
+        return False, None
 
     return (
         check_message(match, event)
         if isinstance(event, MessageEvent)
-        else check_poke(match, event)
+        else (check_poke(match, event), None)
     )
 
 
@@ -140,18 +216,18 @@ async def message_checker(
         else None
     )
 
-    state_reply = []
+    state_reply: List[Tuple[ReplyType, Optional[Dict[str, Any]]]] = []
     for reply in replies:
         filter_checks = [(reply.groups, group), (reply.users, event.user_id)]
         match_checks = [(x, event) for x in reply.matches]
 
         if not (
-            check_list(check_filter, filter_checks)
-            and check_list(check_match, match_checks, True)
+            check_list(check_filter, filter_checks)[0]
+            and (match_result := check_list(check_match, match_checks, True))[0]
         ):
             continue
 
-        state_reply.append(random.choice(reply.replies))
+        state_reply.append((random.choice(reply.replies), match_result[1]))
         if reply.block:
             break
 
@@ -231,12 +307,20 @@ async def _(
     matcher: Matcher,
     state: T_State,
 ):
-    reply: List[ReplyType] = state["reply"]
+    reply: List[Tuple[ReplyType, Optional[Dict[str, Any]]]] = state["reply"]
 
-    # TODO 正则变量替换
     var_dict = await get_var_dict(bot, event)
     reply_msgs: List[ReplyMessagesType] = await asyncio.gather(
-        *(get_reply_msgs(x, var_dict) for x in reply),
+        *(
+            get_reply_msgs(
+                x[0],
+                (
+                    {**var_dict[0], **(var if (var := x[1]) else {})},
+                    var_dict[1],
+                ),
+            )
+            for x in reply
+        ),
     )
 
     for msgs, delay_tuple in reply_msgs:
