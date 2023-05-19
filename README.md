@@ -109,7 +109,7 @@ nonebot.load_plugin('nonebot_plugin_autoreply')
 
 ### 回复配置
 
-请访问 [配置文档](https://autoreply.lgc2333.top/configuring)
+请访问 [配置文档](https://autoreply.lgc2333.top/#/configuring)
 
 ### 常规配置
 
