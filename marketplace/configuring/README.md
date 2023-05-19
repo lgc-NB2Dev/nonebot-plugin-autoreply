@@ -32,7 +32,15 @@
 
   # 消息的匹配规则，是数组，可以放置多个
   matches:
-    - # 匹配模式，可选 `full`(完全匹配)、`fuzzy`(模糊匹配)、`regex`(正则匹配)、`poke`(双击头像戳一戳)
+    - # 匹配模式
+      #
+      # 可选：
+      # - `full` - 完全匹配
+      # - `fuzzy` - 模糊匹配
+      # - `start` - 开头匹配
+      # - `end` - 结尾匹配
+      # - `regex` - 正则匹配
+      # - `poke` - 双击头像戳一戳（拍一拍）
       #
       # 使用 `poke` 匹配时，除了 `possibility` 和 `to_me` 条件，其他的匹配条件都会被忽略
       # 注意：`poke` 会匹配所有戳一戳事件，如果你只想要匹配 Bot 被戳的事件，请将 `to_me` 设为 `true`
@@ -352,11 +360,14 @@
 - `{nickname}` - 发送者昵称
 - `{card}` - 发送者群名片
 - `{display_name}` - 发送者显示名称 _（优先群名片，当群名片为空时为昵称）_
+- `{plaintext}` - 原消息纯文本
+- regex 类型 匹配规则 的 匹配结果
 
 #### 特殊变量
 
 - `{at}` - 艾特发送者
 - `{reply}` - 回复发送者 _（当 `match` 的 `type` 为 `poke` 时为 `None`）_
+- `{message}` - 收到的原消息
 
 ### 示例
 
@@ -369,6 +380,7 @@
 ```yml
 # 注意整个 yml 文件是一个数组，里面包含了多个回复规则
 
+# 变量使用示例
 - matches:
     - match: '^(@|at|艾特)我$'
       type: regex
@@ -405,6 +417,23 @@
     # 前面的 {bs}user_id{be} 会转义成 {user_id} 发送
     # 而后面的 {nickname} 会被替换为发送者昵称
     - '[normal] [CQ:at,qq={bs}user_id{be}] 啊咧？怎么 At 不了 {nickname}？'
+
+# 在变量中获取 regex 匹配结果示例
+# 注意：目前的 regex 匹配结果为纯文本，归属于普通变量，消息段会匹配为 CQ 码
+- matches:
+    - match: '^你(.+?)(了)?([吗嘛么])？?$'
+      type: regex
+  replies:
+    # 可以直接使用变量 v<序号> 引用 regex 括号中内容
+    # 括号内容从 v1 开始，v0 为整个正则的匹配内容
+    - '我{v1}了'
+
+- matches:
+    - match: '^我是(?P<name>.+)$'
+      type: regex
+  replies:
+    # 也可以直接使用变量引用 match.groupdict() 中的内容
+    - '你是一个一个一个{name}'
 ```
 
 #### **JSON**
@@ -413,6 +442,7 @@
 
 ```json
 [
+  // 变量使用示例
   {
     "matches": [
       {
@@ -466,6 +496,34 @@
       // 前面的 {bs}user_id{be} 会转义成 {user_id} 发送
       // 而后面的 {nickname} 会被替换为发送者昵称
       "[normal] [CQ:at,qq={bs}user_id{be}] 啊咧？怎么 At 不了 {nickname}？"
+    ]
+  },
+
+  // 在变量中获取 regex 匹配结果示例
+  // 注意：目前的 regex 匹配结果为纯文本，归属于普通变量，消息段会匹配为 CQ 码
+  {
+    "matches": [
+      {
+        "match": "^你(.+?)(了)?([吗嘛么])？?$",
+        "type": "regex"
+      }
+    ],
+    "replies": [
+      // 可以直接使用变量 v<序号> 引用 regex 括号中内容
+      // 括号内容从 v1 开始，v0 为整个正则的匹配内容
+      "我{v1}了"
+    ]
+  },
+  {
+    "matches": [
+      {
+        "match": "^我是(?P<name>.+)$",
+        "type": "regex"
+      }
+    ],
+    "replies": [
+      // 也可以直接使用变量引用 match.groupdict() 中的内容
+      "你是一个一个一个{name}"
     ]
   }
 ]

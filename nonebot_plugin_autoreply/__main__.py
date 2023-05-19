@@ -145,7 +145,7 @@ def check_message(
             None,
         )
 
-    if match.type == "startswith":
+    if match.type == "start":
         return (
             (
                 msg_str.startswith(match_template)
@@ -158,7 +158,7 @@ def check_message(
             None,
         )
 
-    if match.type == "endswith":
+    if match.type == "end":
         return (
             (
                 msg_str.endswith(match_template)

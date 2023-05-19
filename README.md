@@ -151,6 +151,12 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
 
 ## 📝 更新日志
 
+### 0.2.10
+
+- 新增了 `start`、`end` 匹配方式
+- 添加变量 `message`、`plaintext`
+- 可以使用变量获取 `regex` 类型的匹配结果
+
 ### 0.2.9
 
 - 当回复中含有 `image` / `record` 类型的消息段（无论是 `normal` 还是 `array` 类型的消息），且其 `file` 属性为 `file:///` 开头时，插件将会读取该路径文件并转为 `base64` 发送

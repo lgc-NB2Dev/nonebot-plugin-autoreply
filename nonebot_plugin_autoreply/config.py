@@ -35,8 +35,8 @@ class MatchModel(BaseModel):
     type: Literal[  # noqa: A003
         "full",
         "fuzzy",
-        "startswith",
-        "endswith",
+        "start",
+        "end",
         "regex",
         "poke",
     ] = "fuzzy"
