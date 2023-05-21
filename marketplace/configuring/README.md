@@ -418,6 +418,9 @@
     # 而后面的 {nickname} 会被替换为发送者昵称
     - '[normal] [CQ:at,qq={bs}user_id{be}] 啊咧？怎么 At 不了 {nickname}？'
 
+    # 也可以使用 {{ 和 }} 来转义，效果同上
+    - '[normal] [CQ:at,qq={{user_id}}] 啊咧？怎么 At 不了 {nickname}？'
+
 # 在变量中获取 regex 匹配结果示例
 # 注意：目前的 regex 匹配结果为纯文本，归属于普通变量，消息段会匹配为 CQ 码
 - matches:
