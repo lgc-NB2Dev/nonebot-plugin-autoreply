@@ -1,10 +1,10 @@
 [project]
 name = "nonebot-plugin-autoreply"
-version = "0.2.10"
+version = "0.2.11"
 description = "A powerful auto reply plugin for NoneBot2"
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
 dependencies = [
-    "nonebot2>=2.0.0rc1",
+    "nonebot2>=2.0.0",
     "pydantic>=1.10.4",
     "nonebot-adapter-onebot>=2.1.0",
     "typing-extensions>=4.4.0",
