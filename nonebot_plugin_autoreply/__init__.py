@@ -12,6 +12,6 @@ __plugin_meta__ = PluginMetadata(
     homepage="https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply",
     type="application",
     config=ConfigModel,
-    supported_adapters=["~onebot.v11"],
+    supported_adapters={"~onebot.v11"},
     extra={"License": "MIT", "Author": "student_2333"},
 )

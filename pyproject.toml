@@ -1,12 +1,12 @@
 [project]
 name = "nonebot-plugin-autoreply"
-version = "0.2.11"
+version = "0.2.11.post1"
 description = "A powerful auto reply plugin for NoneBot2"
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
 dependencies = [
     "nonebot2>=2.0.0",
     "pydantic>=1.10.4",
-    "nonebot-adapter-onebot>=2.1.0",
+    "nonebot-adapter-onebot>=2.2.3",
     "typing-extensions>=4.4.0",
     "PyYAML>=6.0",
     "anyio>=3.6.2",
@@ -15,12 +15,12 @@ requires-python = ">=3.8,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
 
+[project.urls]
+homepage = "https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply"
+
 [tool.pdm.build]
 includes = []
 
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
-
-[project.urls]
-homepage = "https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply"
