@@ -1,0 +1,115 @@
+- matches:
+    - match: '运行时错误'
+      type: full
+
+  replies:
+    - type: normal
+      message: |-
+        运行时错误，是源代码正确地编译链接后，在执行阶段遇到的错误。几乎没有任何程序可以完全的避免运行时错误。它可能发生在某些意想不到的情况下。比如：磁盘满了，内存不够了，文件被只读保护了，杀毒软件拦截了等等
+        具体如何看懂运行时错误，请参考：
+        『教你看懂 Intel Fortran 的运行时错误』
+        http://fcode.cn/guide-64-1.html
+
+- matches:
+    - match: '^(severe\(24\))|(severe24)|(s24)|(24)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (24): End-of-fle during read
+        原因：
+        这是读取文件时遇到了文件的结束。例如，代码要求数据有 3 行数据，而实际输入文件只有 2 行。在某些时候，甚至输入文件根本不存在或是空白文件。此外，数据文件缺失某些行某此列也是较大的可能。当然，也可能是循环读取文件时没控制住。比如想读 100 行，结果写错了，读了 1000 行。有时候，可能是文件路径错误，导致实际读取了另一个空白的文件。或者文件扩展名被隐藏了，比如读取 a.txt，但实际的文件名却是 a.txt.txt。
+
+        解决：
+        补足数据文件，或者修改代码使得读取的数据与实际数据文件一致。
+
+- matches:
+    - match: '^(severe\(29\))|(severe29)|(s29)|(29)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (29): File not found
+
+        原因：
+        这个就简单了，文件找不到。最大的可能是文件名写错了，路径 (文件夹) 放置不正确。
+
+        解决：
+        增加应有的文件，或放置到合适的路径下。
+
+- matches:
+    - match: '^(severe\(36\))|(severe36)|(s36)|(36)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (36): Attempt to access non-existent record
+        原因：
+        一般针对直接读取文件，意思是读写了一个不存在的记录。例如文件只有2个记录，却视图读取第3个。也可能是记录长度的字节数设置不正确，使得应该在第2记录的字节超出了文件的字节。
+
+        解决：
+        修改代码或修改文件，使得记录长度与个数相匹配。
+
+- matches:
+    - match: '^(severe\(41\))|(severe41)|(s41)|(41)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (41): Insufficient virtual memory
+        原因：
+        程序试图访问一个受保护或不存在的内存地址。多数为可分配数组，指针等动态内存引发的错误。
+
+        解决：
+        确保数组已经经过分配后才访问，确保指针指向可用的内容。
+
+- matches:
+    - match: '^error\(65\)|error65|e65|65$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        error (65): Floating invalid
+
+        原因：
+        这是计算式最容易发生的错误，它表示浮点数错误，数学函数错误（如超出数学函数的定义域，负数开放，分母为零等等）。
+
+        解决：
+        对数据进行合理控制判断是否在定义域内，如每个算例均出现，应进行 Debug 调试。
+
+- matches:
+    - match: '^(severe\(71\))|(severe71)|(s71)|(71)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (71): Integer divide by zero
+
+        原因：
+        这是计算式最容易发生的错误，它表示浮点数错误，数学函数错误（如超出数学函数的定义域，负数开方，分母为零等等）。
+
+        解决：
+        对数据进行合理控制判断是否在定义域内，如每个算例均出现，应进行 Debug 调试。
+
+
+
+- matches:
+    - match: '^(severe\(161\))|(severe161)|(s161)|(161)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (161): ProgramException -array bounds exceeded
+
+        原因：
+        这是数组越界，即，数组引用的元素超出了定义它的范围。比如定义 a(50:100)，如引用 a(49)或 a(101) 则会越界。很多时候，这是循环对数组操作时，没控制好，比如Doi= 50,100 然后引用了 a(i+1)，当 i=100 时，i+1=101,就会越界。Intel Fortran 的数组越界会给出很详细的错误提示，包括具体越界的数组名，定义范围和引用角标。
+
+        解决：
+        检查越界数组，根据情况修改代码。
