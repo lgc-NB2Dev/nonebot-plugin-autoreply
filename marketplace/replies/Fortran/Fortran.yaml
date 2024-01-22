@@ -18,7 +18,7 @@
   replies:
     - type: normal
       message: |-
-        [CQ:image,file=运行时错误介绍.jpeg]
+        [CQ:image,file=plugins\py-plugin\data\autoreply\运行时错误介绍.png]
 # ------------------
 
 - matches:
@@ -169,7 +169,7 @@
         堆栈溢出。可能性较多：堆栈不够；程序内局部变量太大或太多；递归调用终止失控。
 
         解决：
-        首先尝试该大堆栈，在不同编译器上具体操作不同。VS 中可设置工程属性，如图：[CQ:image,file=severe147.jpeg]
+        首先尝试该大堆栈，在不同编译器上具体操作不同。VS 中可设置工程属性，如图：[CQ:image,file=plugins\py-plugin\data\autoreply\severe147.jpeg]
         
         命令行下增加链接开关：!/STACK:1000000000,1000000000!
         如果还是不足，可将大的局部数组改为可分配数组。如有递归调用函数，检查其终止条件是否设置合理。
