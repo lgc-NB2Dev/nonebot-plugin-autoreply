@@ -205,7 +205,37 @@
 
         原因：
         使用无格式打开的文件，但使用了有格式的输入输出。或反之。
-        
+
         解决：
         使用匹配的格式打开和输入输出。
+# ------------------
+- matches:
+    - match: '^(severe\(257\))|(severe257)|(s257)|(257)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (257): Formatted I/O to unit open for unformatted transfers
+
+        原因：
+        使用无格式打开的文件，但使用了有格式的输入输出。或反之。
+
+        解决：
+        使用匹配的格式打开和输入输出。
+# ------------------
+- matches:
+    - match: '^(severe\(257\))|(severe257)|(s257)|(257)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (259): Sequential-access I/O to unit open for direct access
+
+        原因：
+        使用直接读写方式打开的文件，但使用了顺序读取的输入输出。
+        
+        解决：
+        使用匹配的读写方式打开和输入输出。
 # 一些 Fortran 相关问题配置（WIP）
