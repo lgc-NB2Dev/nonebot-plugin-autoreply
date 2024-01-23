@@ -1,6 +1,6 @@
 name: Generate Sidebar
 
-on: [push, pull_request]
+on: [push, workflow_dispatch]
 
 permissions: write-all
 
