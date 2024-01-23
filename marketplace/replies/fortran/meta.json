@@ -1,0 +1,11 @@
+{
+  "name": "Fortran",
+
+  "desc": "此配置为Fortran初学群（群号：100125753）机器人自动回复使用，其中包括但不限于Intel Fortran错误信息列表及解决方法（WIP）、Fortran 相关问题解决办法（WIP）",
+
+  "author": "Fcoder",
+
+  "author_link": "http://fcode.cn/",
+
+  "tags": ["Fortran"]
+}
