@@ -1,3 +1,4 @@
+# 自用本地路径：plugins\\py-plugin\\data\\autoreply\\
 # Intel Fortran 运行时错误相关配置（WIP）
 - matches:
     - match: '运行时错误'
@@ -18,9 +19,8 @@
   replies:
     - type: normal
       message: |-
-        [CQ:image,file=plugins\py-plugin\data\autoreply\运行时错误介绍.png]
+        [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/运行时错误介绍.png]
 # ------------------
-
 - matches:
     - match: '^(severe\(24\))|(severe24)|(s24)|(24)$'
       type: regex
@@ -169,8 +169,7 @@
         堆栈溢出。可能性较多：堆栈不够；程序内局部变量太大或太多；递归调用终止失控。
 
         解决：
-        首先尝试该大堆栈，在不同编译器上具体操作不同。VS 中可设置工程属性，如图：[CQ:image,file=plugins\py-plugin\data\autoreply\severe147.jpeg]
-        
+        首先尝试该大堆栈，在不同编译器上具体操作不同。VS 中可设置工程属性，如图：[CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/severe147.jpeg]
         命令行下增加链接开关：!/STACK:1000000000,1000000000!
         如果还是不足，可将大的局部数组改为可分配数组。如有递归调用函数，检查其终止条件是否设置合理。
 # ------------------
@@ -249,3 +248,14 @@
         解决：
         使用匹配的读写方式打开和输入输出。
 # 一些 Fortran 相关问题配置（WIP）
+- matches:
+    - match: '版本'
+      type: full
+
+  replies:
+    - type: normal
+      message: |-
+        [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/英特尔oneAPI版本表.png]
+        若想了解更多信息，请访问：
+        https://www.intel.com/content/www/us/en/developer/articles/reference-implementation/intel-compilers-compatibility-with-microsoft-visual-studio-and-xcode.html
+        
