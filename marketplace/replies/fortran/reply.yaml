@@ -22,6 +22,26 @@
         [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/运行时错误介绍.png]
 # ------------------
 - matches:
+    - match: '^(severe\(10\)|severe10|s10|10)$'
+      type: regex
+
+  replies:
+    - type: normal
+      message: |-
+        severe (10): Cannot overwrite existing file
+        unit x, file X:\Fortran\example.dat
+
+        原因：
+        当使用 I/O 过程中 OPEN 语句 的 'Unit=x' 和 'STATUS='NEW' 子句（创建新文件）时，指定的文件 example.dat 已存在。 
+         
+        解决：
+        确保在源程序中指定了正确的文件名、目录路径、unit 等。 并且决定是否：
+        • 在重新运行程序之前重命名或删除现有文件
+        • 修改源文件以指定不同的文件规范、I/O unit 或 STATUS 子句
+
+        PS：open 语句相关内容请参考：群文件 → Fortran程序设计_StephenJ·Champan_第四版（添加了各章节小标题版本）.pdf
+# ------------------
+- matches:
     - match: '^(severe\(24\)|severe24|s24|24)$'
       type: regex
 
