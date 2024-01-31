@@ -19,7 +19,7 @@
   replies:
     - type: normal
       message: |-
-        [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/运行时错误介绍.png]
+        [CQ:image,file=https://autoreply.lgc2333.top/replies/fortran/运行时错误介绍.png]
 ## ------------------
 - matches:
     - match: '^severe\(10\)$|^severe10$|^s10$|^10$'
@@ -189,7 +189,7 @@
         堆栈溢出。可能性较多：堆栈不够；程序内局部变量太大或太多；递归调用终止失控。
 
         解决：
-        首先尝试该大堆栈，在不同编译器上具体操作不同。VS 中可设置工程属性，如图：[CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/severe147.jpeg]
+        首先尝试该大堆栈，在不同编译器上具体操作不同。VS 中可设置工程属性，如图：[CQ:image,file=https://autoreply.lgc2333.top/replies/fortran/severe147.jpeg]
         命令行下增加链接开关：!/STACK:1000000000,1000000000!
         如果还是不足，可将大的局部数组改为可分配数组。如有递归调用函数，检查其终止条件是否设置合理。
 ## ------------------
@@ -275,7 +275,7 @@
   replies:
     - type: normal
       message: |-
-        [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/英特尔oneAPI版本表.png]
+        [CQ:image,file=https://autoreply.lgc2333.top/replies/fortran/英特尔oneAPI版本表.png]
         若想了解更多信息，请访问：
         https://www.intel.com/content/www/us/en/developer/articles/reference-implementation/intel-compilers-compatibility-with-microsoft-visual-studio-and-xcode.html
 
@@ -287,7 +287,7 @@
     - type: normal
       message: |-
         若想直接运行 VS 编译出的 Fortran 程序可执行文件，请按照下图进行编译器配置，选择无依赖
-        [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/无依赖.png]
+        [CQ:image,file=https://autoreply.lgc2333.top/replies/fortran/无依赖.png]
 
 # 一些和 Fortran 没那么有关系，但有意思的东西
 - matches:
@@ -297,7 +297,7 @@
   replies:
     - type: normal
       message: |-
-        [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/能跑就行.gif]
+        [CQ:image,file=https://autoreply.lgc2333.top/replies/fortran/能跑就行.gif]
 ## ------------------
 - matches:
     - match: '提问的艺术'
@@ -307,5 +307,5 @@
     - type: normal
       message: |-
         带有🔗链接的项，可以在群文件→其他→提问的艺术（新）.pdf中点击跳转到对应网站
-        [CQ:image,file=https://autoreply.lgc2333.top/#/market/replies/fortran/提问的艺术（新）.png]
+        [CQ:image,file=https://autoreply.lgc2333.top/replies/fortran/提问的艺术（新）.png]
 
