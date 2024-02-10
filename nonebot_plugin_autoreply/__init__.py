@@ -1,8 +1,7 @@
 from nonebot.plugin import PluginMetadata
 
 from . import __main__ as __main__
-from .config import ConfigModel
-from .config import reload_replies as reload_replies
+from .config import ConfigModel, reload_replies as reload_replies
 
 __version__ = "0.2.11"
 __plugin_meta__ = PluginMetadata(

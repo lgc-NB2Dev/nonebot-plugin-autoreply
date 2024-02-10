@@ -98,7 +98,9 @@ def main():
         info_url = f"market/replies/{dir_name}"
         br_desc = meta.desc.replace("\n", "<br />")
 
-        sidebar_md = f'    - [{meta.name}]({info_url} "{meta.name} | AutoReply 回复市场")'
+        sidebar_md = (
+            f'    - [{meta.name}]({info_url} "{meta.name} | AutoReply 回复市场")'
+        )
         market_list_md = (
             f"| [{meta.name}]({info_url}) "
             f"| [{meta.author}]({meta.author_link}) "

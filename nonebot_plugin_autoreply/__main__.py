@@ -14,6 +14,7 @@ from typing import (
     Union,
     cast,
 )
+from typing_extensions import TypeVarTuple, Unpack
 
 from nonebot import on_command, on_message, on_notice
 from nonebot.adapters.onebot.v11 import (
@@ -27,7 +28,6 @@ from nonebot.adapters.onebot.v11 import (
 from nonebot.matcher import Matcher
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
-from typing_extensions import TypeVarTuple, Unpack
 
 from nonebot_plugin_autoreply.util import VarDictType, get_var_dict, replace_message_var
 
@@ -115,7 +115,7 @@ def check_message(
         msg_plaintext = msg_plaintext.strip()
 
     if match.type == "regex":
-        flag = re.I if match.ignore_case else 0
+        flag = re.IGNORECASE if match.ignore_case else 0
         match_obj = re.search(match_template, msg_str, flag)
         if (not match_obj) and match.allow_plaintext:
             match_obj = re.search(match_template, msg_plaintext, flag)
@@ -223,7 +223,7 @@ async def message_checker(
 
         if not (
             check_list(check_filter, filter_checks)[0]
-            and (match_result := check_list(check_match, match_checks, True))[0]
+            and (match_result := check_list(check_match, match_checks, is_any=True))[0]
         ):
             continue
 
@@ -275,7 +275,9 @@ async def get_reply_msgs(
             delay = (delay, delay)
 
         msg = cast(List[ReplyModel], msg)
-        msgs = [(await get_reply_msgs(x, var_dict, True))[0][0] for x in msg]
+        msgs = [
+            (await get_reply_msgs(x, var_dict, refuse_multi=True))[0][0] for x in msg
+        ]
         if reply.shuffle:
             random.shuffle(msgs)
 

@@ -112,7 +112,7 @@ def load_config(path: Path) -> List[ReplyEntryModel]:
     content = path.read_text(encoding="u8")
 
     if path.suffix in (".yml", ".yaml"):
-        obj: list = yaml.load(content, Loader=yaml.FullLoader)
+        obj: list = yaml.safe_load(content)
     else:
         obj: list = json.loads(content)
 
@@ -138,7 +138,9 @@ def reload_replies() -> Tuple[int, int]:
             fail += 1
 
         else:
-            logger.opt(colors=True).info(f"加载回复配置 <y>{file_name}</y> <l><g>成功</g></l>")
+            logger.opt(colors=True).info(
+                f"加载回复配置 <y>{file_name}</y> <l><g>成功</g></l>",
+            )
             success += 1
 
     replies.sort(key=lambda x: x.priority)
