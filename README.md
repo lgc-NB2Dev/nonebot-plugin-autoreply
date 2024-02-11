@@ -18,7 +18,7 @@ _✨ 自动回复 ✨_
 <a href="https://pypi.python.org/pypi/nonebot-plugin-autoreply">
     <img src="https://img.shields.io/pypi/v/nonebot-plugin-autoreply.svg" alt="pypi">
 </a>
-<img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="python">
+<img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="python">
 <a href="https://pypi.python.org/pypi/nonebot-plugin-autoreply">
     <img src="https://img.shields.io/pypi/dm/nonebot-plugin-autoreply" alt="pypi download">
 </a>
