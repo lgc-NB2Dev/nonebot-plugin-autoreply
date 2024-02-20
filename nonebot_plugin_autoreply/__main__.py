@@ -29,8 +29,6 @@ from nonebot.matcher import Matcher
 from nonebot.permission import SUPERUSER
 from nonebot.typing import T_State
 
-from nonebot_plugin_autoreply.util import VarDictType, get_var_dict, replace_message_var
-
 from .config import (
     FilterModel,
     MatchModel,
@@ -42,6 +40,7 @@ from .config import (
     reload_replies,
     replies,
 )
+from .util import VarDictType, get_var_dict, replace_message_var
 
 T = TypeVar("T")
 TArgs = TypeVarTuple("TArgs")
@@ -115,18 +114,30 @@ def check_message(
         msg_plaintext = msg_plaintext.strip()
 
     if match.type == "regex":
+        plaintext = False
         flag = re.IGNORECASE if match.ignore_case else 0
         match_obj = re.search(match_template, msg_str, flag)
         if (not match_obj) and match.allow_plaintext:
+            plaintext = True
             match_obj = re.search(match_template, msg_plaintext, flag)
 
         if match_obj:
             var_dict = {}
-            var_dict["v0"] = match_obj.string
-            var_dict.update(
-                {f"v{i + 1}": str(x or "") for i, x in enumerate(match_obj.groups())},
+            var_dict["v0"] = (
+                match_obj.string if plaintext else Message(match_obj.string)
             )
-            var_dict.update({k: str(v or "") for k, v in match_obj.groupdict().items()})
+            var_dict.update(
+                {
+                    f"v{i + 1}": (str(x) if plaintext else Message(x) if x else "")
+                    for i, x in enumerate(match_obj.groups())
+                },
+            )
+            var_dict.update(
+                {
+                    k: (str(v) if plaintext else Message(v) if v else "")
+                    for k, v in match_obj.groupdict().items()
+                },
+            )
             return True, var_dict
 
         return False, None

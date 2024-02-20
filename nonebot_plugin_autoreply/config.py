@@ -14,7 +14,7 @@ from typing import (
 )
 
 import yaml
-from nonebot import get_driver
+from nonebot import get_plugin_config
 from nonebot.log import logger
 from pydantic import BaseModel
 
@@ -96,7 +96,7 @@ class ConfigModel(BaseModel):
 
 
 replies: List[ReplyEntryModel] = []
-config = ConfigModel.parse_obj(get_driver().config)
+config = get_plugin_config(ConfigModel)
 
 
 def iter_config_path(root_path: Path = DATA_PATH) -> Iterator[Path]:

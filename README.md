@@ -12,18 +12,27 @@
 
 _✨ 自动回复 ✨_
 
-<a href="./LICENSE">
-    <img src="https://img.shields.io/github/license/lgc2333/nonebot-plugin-autoreply.svg" alt="license">
-</a>
-<a href="https://pypi.python.org/pypi/nonebot-plugin-autoreply">
-    <img src="https://img.shields.io/pypi/v/nonebot-plugin-autoreply.svg" alt="pypi">
-</a>
 <img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="python">
-<a href="https://pypi.python.org/pypi/nonebot-plugin-autoreply">
-    <img src="https://img.shields.io/pypi/dm/nonebot-plugin-autoreply" alt="pypi download">
+<a href="https://pdm.fming.dev">
+  <img src="https://img.shields.io/badge/pdm-managed-blueviolet" alt="pdm-managed">
 </a>
 <a href="https://wakatime.com/badge/user/b61b0f9a-f40b-4c82-bc51-0a75c67bfccf/project/3eb869b8-2edf-46dd-b325-916d9f8a4888">
   <img src="https://wakatime.com/badge/user/b61b0f9a-f40b-4c82-bc51-0a75c67bfccf/project/3eb869b8-2edf-46dd-b325-916d9f8a4888.svg" alt="wakatime">
+</a>
+
+<br />
+
+<a href="https://pydantic.dev">
+  <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/lgc-NB2Dev/readme/main/template/pyd-v1-or-v2.json" alt="Pydantic Version 1 Or 2" >
+</a>
+<a href="./LICENSE">
+  <img src="https://img.shields.io/github/license/lgc-NB2Dev/nonebot-plugin-autoreply.svg" alt="license">
+</a>
+<a href="https://pypi.python.org/pypi/nonebot-plugin-autoreply">
+  <img src="https://img.shields.io/pypi/v/nonebot-plugin-autoreply.svg" alt="pypi">
+</a>
+<a href="https://pypi.python.org/pypi/nonebot-plugin-autoreply">
+  <img src="https://img.shields.io/pypi/dm/nonebot-plugin-autoreply" alt="pypi download">
 </a>
 </div>
 
@@ -150,6 +159,15 @@ Telegram：[@lgc2333](https://t.me/lgc2333)
   </details>
 
 ## 📝 更新日志
+
+### 0.2.12
+
+- 适配 Pydantic V1 & V2
+- 修复 [#17](https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply/issues/17)
+
+### 0.2.11
+
+- 🎉 NoneBot 2.0 🚀
 
 ### 0.2.10
 

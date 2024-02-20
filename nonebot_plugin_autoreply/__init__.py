@@ -3,7 +3,7 @@ from nonebot.plugin import PluginMetadata
 from . import __main__ as __main__
 from .config import ConfigModel, reload_replies as reload_replies
 
-__version__ = "0.2.11"
+__version__ = "0.2.12"
 __plugin_meta__ = PluginMetadata(
     name="AutoReply",
     description="配置文件高度可自定义的自动回复插件",
