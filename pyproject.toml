@@ -5,7 +5,6 @@ description = "A powerful auto reply plugin for NoneBot2"
 authors = [{ name = "student_2333", email = "lgc2333@126.com" }]
 dependencies = [
     "nonebot2>=2.2.0",
-    "pydantic>=1.10.0,<2",
     "nonebot-adapter-onebot>=2.2.3",
     "typing-extensions>=4.4.0",
     "PyYAML>=6.0",
