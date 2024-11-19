@@ -90,7 +90,7 @@ async def replace_message_var(message: Message, var_dict: VarDictType) -> Messag
     return message
 
 ALLOWED_SUFFIXES = {"image": [".jpg", ".png", ".gif"], "record": [".mp3", ".wav"]}
-# Í¬Ò»¸ö²ã¼¶µÄÎÄ¼þ/ÎÄ¼þ¼Ð±»Ñ¡ÖÐµÄ¸ÅÂÊÊÇÏàµÈµÄ
+# åŒä¸€ä¸ªå±‚çº§çš„æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹è¢«é€‰ä¸­çš„æ¦‚çŽ‡æ˜¯ç›¸ç­‰çš„
 async def get_random_file(base_path: Path, type: str) -> Union[Path, None]: 
     selected_file: Union[Path, None] = None
     count = 0
