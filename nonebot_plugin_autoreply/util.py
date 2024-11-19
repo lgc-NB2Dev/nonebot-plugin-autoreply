@@ -11,6 +11,8 @@ from nonebot.adapters.onebot.v11 import (
     PokeNotifyEvent,
 )
 
+from random import randint
+
 VarDictType = Tuple[Dict[str, Any], Dict[str, Any]]
 
 
@@ -79,6 +81,27 @@ async def replace_message_var(message: Message, var_dict: VarDictType) -> Messag
         if seg.type in ("image", "record"):
             file = seg.data.get("file")
             if isinstance(file, str) and file.startswith("file:///"):
-                seg.data["file"] = f2s(await Path(file[8:]).read_bytes())
+                path = Path(file[8:])
+                if await path.is_dir():
+                    file = await get_random_file(path, seg.type)
+                    path = file if file else Path()
+                seg.data["file"] = f2s(await path.read_bytes())
 
     return message
+
+ALLOWED_SUFFIXES = {"image": [".jpg", ".png", ".gif"], "record": [".mp3", ".wav"]}
+# 同一个层级的文件/文件夹被选中的概率是相等的
+async def get_random_file(base_path: Path, type: str) -> Union[Path, None]: 
+    selected_file: Union[Path, None] = None
+    count = 0
+    async for path in base_path.iterdir():
+        file = None
+        if await path.is_dir():
+            file = await get_random_file(path, type)
+        elif await path.is_file():
+            file = path
+        if isinstance(file, Path) and file.suffix in ALLOWED_SUFFIXES[type]:
+            count += 1
+            if randint(1, count) == 1:
+                selected_file = file
+    return selected_file
