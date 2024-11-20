@@ -89,19 +89,15 @@ async def replace_message_var(message: Message, var_dict: VarDictType) -> Messag
 
     return message
 
+
 ALLOWED_SUFFIXES = {"image": [".jpg", ".png", ".gif"], "record": [".mp3", ".wav"]}
-# 同一个层级的文件或文件夹被选中的概率是相等的
-async def get_random_file(base_path: Path, type: str) -> Union[Path, None]: 
+
+async def get_random_file(base_path: Path, file_type: str) -> Union[Path, None]: 
     selected_file: Union[Path, None] = None
     count = 0
     async for path in base_path.iterdir():
-        file = None
-        if await path.is_dir():
-            file = await get_random_file(path, type)
-        elif await path.is_file():
-            file = path
-        if isinstance(file, Path) and file.suffix in ALLOWED_SUFFIXES[type]:
+        if await path.is_file() and path.suffix in ALLOWED_SUFFIXES[file_type]:
             count += 1
             if randint(1, count) == 1:
-                selected_file = file
+                selected_file = path
     return selected_file
