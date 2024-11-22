@@ -112,9 +112,9 @@ def load_config(path: Path) -> List[ReplyEntryModel]:
     content = path.read_text(encoding="u8")
 
     if path.suffix in (".yml", ".yaml"):
-        obj: list = yaml.safe_load(content)
+        obj = yaml.safe_load(content)
     else:
-        obj: list = json.loads(content)
+        obj = json.loads(content)
 
     return [ReplyEntryModel(**x) for x in obj]
 
