@@ -12,5 +12,5 @@ __plugin_meta__ = PluginMetadata(
     type="application",
     config=ConfigModel,
     supported_adapters={"~onebot.v11"},
-    extra={"License": "MIT", "Author": "student_2333"},
+    extra={"License": "MIT", "Author": "LgCookie"},
 )

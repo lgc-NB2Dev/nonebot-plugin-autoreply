@@ -1,7 +1,7 @@
 <!-- markdownlint-disable -->
 # 菜鸡语录
 
-作者：[TennyZhuang & student_2333](https://github.com/TennyZhuang/Chi-Corpus/blob/master/common.txt)
+作者：[TennyZhuang & LgCookie](https://github.com/TennyZhuang/Chi-Corpus/blob/master/common.txt)
 
 ![菜](https://img.shields.io/badge/-菜-brightgreen?style=flat-square) ![菜鸡](https://img.shields.io/badge/-菜鸡-brightgreen?style=flat-square) ![废物](https://img.shields.io/badge/-废物-brightgreen?style=flat-square)
 

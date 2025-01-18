@@ -1,7 +1,7 @@
 <!-- markdownlint-disable -->
 # FuckYou
 
-作者：[xiaoye12123 & student_2333](https://github.com/lgc-NB2Dev/nonebot-plugin-fuckyou)
+作者：[xiaoye12123 & LgCookie](https://github.com/lgc-NB2Dev/nonebot-plugin-fuckyou)
 
 ![fuck](https://img.shields.io/badge/-fuck-brightgreen?style=flat-square) ![you](https://img.shields.io/badge/-you-brightgreen?style=flat-square) ![骂人](https://img.shields.io/badge/-骂人-brightgreen?style=flat-square)
 
