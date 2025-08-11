@@ -4,13 +4,13 @@ dynamic = ["version"]
 description = "A powerful auto reply plugin for NoneBot2"
 authors = [{ name = "LgCookie", email = "lgc2333@126.com" }]
 dependencies = [
-    "nonebot2>=2.4.1",
+    "nonebot2>=2.4.3",
     "nonebot-adapter-onebot>=2.4.6",
-    "typing-extensions>=4.12.2",
+    "typing-extensions>=4.14.1",
     "PyYAML>=6.0.2",
-    "anyio>=4.8.0",
+    "anyio>=4.10.0",
 ]
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 readme = "README.md"
 license = { text = "MIT" }
 
