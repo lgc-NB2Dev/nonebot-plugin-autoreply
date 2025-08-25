@@ -17,13 +17,9 @@ license = { text = "MIT" }
 [project.urls]
 homepage = "https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply"
 
-[tool.pdm.build]
-includes = []
-
-[tool.pdm.version]
-source = "file"
-path = "nonebot_plugin_autoreply/__init__.py"
-
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "nonebot_plugin_autoreply/__init__.py"
