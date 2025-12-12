@@ -1,3 +1,5 @@
+# ruff: noqa: INP001
+
 import json
 import logging
 from dataclasses import dataclass

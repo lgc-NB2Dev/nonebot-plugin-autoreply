@@ -1,17 +1,11 @@
 import asyncio
 import random
 import re
+from collections.abc import Callable, Iterable
 from itertools import starmap
 from typing import (
     Any,
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Tuple,
     TypeVar,
-    Union,
     cast,
 )
 from typing_extensions import TypeVarTuple, Unpack
@@ -50,14 +44,11 @@ TArgs = TypeVarTuple("TArgs")
 def check_list(
     function: Callable[
         [Unpack[TArgs]],
-        Union[
-            bool,
-            Tuple[bool, Optional[Dict[str, Any]]],
-        ],
+        bool | tuple[bool, dict[str, Any] | None],
     ],
-    will_check: Iterable[Tuple[Unpack[TArgs]]],
+    will_check: Iterable[tuple[Unpack[TArgs]]],
     is_any: bool = False,
-) -> Tuple[bool, Optional[Dict[str, Any]]]:
+) -> tuple[bool, dict[str, Any] | None]:
     var_dict_total = {}
 
     for val in starmap(function, will_check):
@@ -87,7 +78,7 @@ def check_list(
     return True, var_dict_total
 
 
-def check_filter(will_check: FilterModel[T], val: Optional[T]) -> bool:
+def check_filter(will_check: FilterModel[T], val: T | None) -> bool:
     ok = val not in will_check.values  # 判断黑名单 值不在列表中 ok
     return (not ok) if will_check.type == "white" else ok  # 白名单则反过来
 
@@ -95,7 +86,7 @@ def check_filter(will_check: FilterModel[T], val: Optional[T]) -> bool:
 def check_message(
     match: MatchModel,
     event: MessageEvent,
-) -> Tuple[bool, Optional[Dict[str, Any]]]:
+) -> tuple[bool, dict[str, Any] | None]:
     if match.type == "poke":
         return False, None
 
@@ -202,8 +193,8 @@ def check_poke(match: MatchModel, event: PokeNotifyEvent) -> bool:
 
 def check_match(
     match: MatchType,
-    event: Union[MessageEvent, PokeNotifyEvent],
-) -> Tuple[bool, Optional[Dict[str, Any]]]:
+    event: MessageEvent | PokeNotifyEvent,
+) -> tuple[bool, dict[str, Any] | None]:
     if isinstance(match, str):
         match = MatchModel(match=match)
 
@@ -218,7 +209,7 @@ def check_match(
 
 
 async def message_checker(
-    event: Union[MessageEvent, PokeNotifyEvent],
+    event: MessageEvent | PokeNotifyEvent,
     state: T_State,
 ) -> bool:
     group = (
@@ -227,7 +218,7 @@ async def message_checker(
         else None
     )
 
-    state_reply: List[Tuple[ReplyType, Optional[Dict[str, Any]]]] = []
+    state_reply: list[tuple[ReplyType, dict[str, Any] | None]] = []
     for reply in replies:
         filter_checks = [(reply.groups, group), (reply.users, event.user_id)]
         match_checks = [(x, event) for x in reply.matches]
@@ -246,7 +237,7 @@ async def message_checker(
     return bool(state_reply)
 
 
-ReplyMessagesType = Tuple[List[Message], Optional[Tuple[int, int]]]
+ReplyMessagesType = tuple[list[Message], tuple[int, int] | None]
 
 
 async def get_reply_msgs(
@@ -268,11 +259,11 @@ async def get_reply_msgs(
     msg = reply.message
 
     if rt == "plain":
-        msg = cast(str, msg)
+        msg = cast("str", msg)
         return [Message() + msg], None
 
     if rt == "array":
-        msg = cast(List[MessageSegmentModel], msg)
+        msg = cast("list[MessageSegmentModel]", msg)
         msg = Message(MessageSegment(type=x.type, data=x.data) for x in msg)
         msg = await replace_message_var(msg, var_dict)
         return [msg], None
@@ -285,7 +276,7 @@ async def get_reply_msgs(
         if isinstance(delay, int):
             delay = (delay, delay)
 
-        msg = cast(List[ReplyModel], msg)
+        msg = cast("list[ReplyModel]", msg)
         msgs = [
             (await get_reply_msgs(x, var_dict, refuse_multi=True))[0][0] for x in msg
         ]
@@ -295,7 +286,7 @@ async def get_reply_msgs(
         return msgs, delay
 
     # default normal
-    msg = cast(str, msg)
+    msg = cast("str", msg)
     return [await replace_message_var(Message(msg), var_dict)], None
 
 
@@ -316,14 +307,14 @@ poke_matcher = on_notice(
 @poke_matcher.handle()
 async def _(
     bot: Bot,
-    event: Union[MessageEvent, PokeNotifyEvent],
+    event: MessageEvent | PokeNotifyEvent,
     matcher: Matcher,
     state: T_State,
 ):
-    reply: List[Tuple[ReplyType, Optional[Dict[str, Any]]]] = state["reply"]
+    reply: list[tuple[ReplyType, dict[str, Any] | None]] = state["reply"]
 
     var_dict = await get_var_dict(bot, event)
-    reply_msgs: List[ReplyMessagesType] = await asyncio.gather(
+    reply_msgs: list[ReplyMessagesType] = await asyncio.gather(
         *(
             get_reply_msgs(
                 x[0],

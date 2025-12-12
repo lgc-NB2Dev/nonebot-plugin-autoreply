@@ -1,14 +1,11 @@
 import json
+from collections.abc import Iterator
 from pathlib import Path
 from typing import (
     Any,
-    Dict,
     Generic,
-    Iterator,
-    List,
     Literal,
-    Optional,
-    Tuple,
+    TypeAlias,
     TypeVar,
     Union,
 )
@@ -27,8 +24,8 @@ if not DATA_PATH.exists():
 ALLOWED_SUFFIXES = (".json", ".yml", ".yaml")
 
 MatchType = Union[str, "MatchModel"]
-ReplyType = Union[str, List["MessageSegmentModel"], "ReplyModel"]
-MessageType = Union[str, List["MessageSegmentModel"], List[ReplyType]]
+ReplyType = Union[str, list["MessageSegmentModel"], "ReplyModel"]
+MessageType: TypeAlias = str | list["MessageSegmentModel"] | list[ReplyType]
 
 
 class MatchModel(BaseModel):
@@ -42,7 +39,7 @@ class MatchModel(BaseModel):
     ] = "fuzzy"
     possibility: float = 1.0
 
-    match: Optional[str] = None
+    match: str | None = None
     to_me: bool = False
     ignore_case: bool = True
     strip: bool = True
@@ -51,19 +48,19 @@ class MatchModel(BaseModel):
 
 class MessageSegmentModel(BaseModel):
     type: str  # noqa: A003
-    data: Dict[str, Any]
+    data: dict[str, Any]
 
 
 class ReplyModel(BaseModel):
     type: Literal["normal", "plain", "array", "multi"]  # noqa: A003
     message: MessageType
     shuffle: bool = False
-    delay: Union[Tuple[int, int], int] = (0, 0)
+    delay: tuple[int, int] | int = (0, 0)
 
 
 class FilterModel(BaseModel, Generic[T]):
     type: Literal["black", "white"] = "black"  # noqa: A003
-    values: List[T]
+    values: list[T]
 
 
 # TODO cool down
@@ -80,8 +77,8 @@ class ReplyEntryModel(BaseModel):
     block: bool = True
     priority: int = 1
     # cool_down: Optional[CoolDownModel] = None
-    matches: List[MatchType]
-    replies: List[ReplyType]
+    matches: list[MatchType]
+    replies: list[ReplyType]
     groups: FilterModel[int] = FilterModel(values=[])
     users: FilterModel[int] = FilterModel(values=[])
 
@@ -95,7 +92,7 @@ class ConfigModel(BaseModel):
     autoreply_priority: int = 99
 
 
-replies: List[ReplyEntryModel] = []
+replies: list[ReplyEntryModel] = []
 config = get_plugin_config(ConfigModel)
 
 
@@ -108,7 +105,7 @@ def iter_config_path(root_path: Path = DATA_PATH) -> Iterator[Path]:
             yield path
 
 
-def load_config(path: Path) -> List[ReplyEntryModel]:
+def load_config(path: Path) -> list[ReplyEntryModel]:
     content = path.read_text(encoding="u8")
 
     if path.suffix in (".yml", ".yaml"):
@@ -119,7 +116,7 @@ def load_config(path: Path) -> List[ReplyEntryModel]:
     return [ReplyEntryModel(**x) for x in obj]
 
 
-def reload_replies() -> Tuple[int, int]:
+def reload_replies() -> tuple[int, int]:
     replies.clear()
 
     success = 0

@@ -1,6 +1,6 @@
 import mimetypes
 import random
-from typing import Any, Dict, Optional, Tuple, Union, cast
+from typing import Any, cast
 
 from anyio import Path
 from nonebot import logger
@@ -14,12 +14,12 @@ from nonebot.adapters.onebot.v11 import (
     PokeNotifyEvent,
 )
 
-VarDictType = Tuple[Dict[str, Any], Dict[str, Any]]
+VarDictType = tuple[dict[str, Any], dict[str, Any]]
 
 
 async def get_var_dict(
     bot: Bot,
-    event: Union[MessageEvent, PokeNotifyEvent],
+    event: MessageEvent | PokeNotifyEvent,
 ) -> VarDictType:
     is_message = isinstance(event, MessageEvent)
     is_group = isinstance(event, GroupMessageEvent)
@@ -95,7 +95,7 @@ async def process_res_seg(seg: MessageSegment):
 async def replace_message_var(message: Message, var_dict: VarDictType) -> Message:
     normal_var, seg_var = var_dict
     message = cast(
-        Message,
+        "Message",
         Message.template(message).format_map({**normal_var, **seg_var}),
     )
 
@@ -111,7 +111,7 @@ async def replace_message_var(message: Message, var_dict: VarDictType) -> Messag
     return message
 
 
-async def get_random_file(base_path: Path, mime_pfx: str) -> Optional[Path]:
+async def get_random_file(base_path: Path, mime_pfx: str) -> Path | None:
     async def inner(p: Path):
         async for x in p.iterdir():
             if await x.is_dir():
