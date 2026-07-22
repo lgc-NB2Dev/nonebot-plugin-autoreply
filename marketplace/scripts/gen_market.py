@@ -9,7 +9,7 @@ from cn_sort import sort_text_list
 
 logging.disable(999)
 
-ROOT_PATH = Path(__file__).parent.parent
+ROOT_PATH = Path(__file__).parent.parent / "static"
 REPLIES_PATH = ROOT_PATH / "replies"
 REPLIES_INDEX_PATH = ROOT_PATH / "replies" / "index.json"
 MARKET_ROOT_PATH = ROOT_PATH / "market"

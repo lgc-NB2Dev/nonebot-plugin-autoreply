@@ -4,7 +4,7 @@
 
 1. Fork 本仓库
 
-2. 在仓库 `marketplace/replies` 文件夹下新建一个文件夹，文件夹名称要求和你的配置内容相关，且只允许小写字母、数字和下划线
+2. 在仓库 `marketplace/static/replies` 文件夹下新建一个文件夹，文件夹名称要求和你的配置内容相关，且只允许小写字母、数字和下划线
 
 3. 在你新创建的文件夹内，新建下述文件
 
@@ -37,4 +37,4 @@
 
 4. 文件提交完成后，向仓库提交 Pull Request 等待合并即可 :wink:
 
-如果有疑问，请看 [这个](https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply/tree/master/marketplace/replies/are_you_here) 示例
+如果有疑问，请看 [这个](https://github.com/lgc-NB2Dev/nonebot-plugin-autoreply/tree/master/marketplace/static/replies/are_you_here) 示例

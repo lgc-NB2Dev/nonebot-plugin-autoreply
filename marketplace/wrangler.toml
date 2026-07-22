@@ -1,10 +1,7 @@
-"$schema" = "../../../node_modules/wrangler/config-schema.json"
+"$schema" = "./node_modules/wrangler/config-schema.json"
 
 name = "nbp-autoreply-marketplace"
-compatibility_date = "2025-09-10"
+compatibility_date = "2026-07-22"
 
 [assets]
-directory = "."
-
-[observability]
-enabled = true
+directory = "static"

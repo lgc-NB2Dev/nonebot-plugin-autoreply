@@ -1,6 +1,4 @@
 {
-  "name": "tmp",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
@@ -8,6 +6,6 @@
     "start": "wrangler dev"
   },
   "devDependencies": {
-    "wrangler": "^4.35.0"
+    "wrangler": "^4.113.0"
   }
 }
