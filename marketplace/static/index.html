@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,6 +9,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
     />
+    <link rel="icon" href="/favicon.svg" sizes="any" />
 
     <link rel="stylesheet" href="//unpkg.com/docsify@4/lib/themes/vue.css" />
     <link
@@ -25,8 +26,9 @@
     <style>
       :root {
         /* 字体 */
-        --codeFontFamily: 'JetBrains Mono', 'Roboto Mono', 'Monaco',
-          'Courier New', Courier, 'Microsoft YaHei UI', monospace !important;
+        --codeFontFamily:
+          'JetBrains Mono', 'Roboto Mono', 'Monaco', 'Courier New', Courier,
+          'Microsoft YaHei UI', monospace !important;
 
         /* Tab */
         --docsifytabs-border-color: var(--border-color);
@@ -60,13 +62,13 @@
       src="https://www.googletagmanager.com/gtag/js?id=G-GFRGTZK8C6"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
+      window.dataLayer = window.dataLayer || []
       function gtag() {
-        dataLayer.push(arguments);
+        dataLayer.push(arguments)
       }
-      gtag('js', new Date());
+      gtag('js', new Date())
 
-      gtag('config', 'G-GFRGTZK8C6');
+      gtag('config', 'G-GFRGTZK8C6')
     </script>
   </head>
 
@@ -102,14 +104,14 @@
         markdown: {
           renderer: {
             code: (code, lang) => {
-              const cc = document.createElement('code');
-              cc.textContent = code;
-              return `<pre data-lang="${lang}" class="line-numbers language-${lang}">${cc.outerHTML}</pre>`;
+              const cc = document.createElement('code')
+              cc.textContent = code
+              return `<pre data-lang="${lang}" class="line-numbers language-${lang}">${cc.outerHTML}</pre>`
             },
           },
         },
         plugins: [(hook) => hook.doneEach(() => Prism.highlightAll())],
-      };
+      }
     </script>
 
     <script src="//polyfill.io/v3/polyfill.min.js?features=String.prototype.normalize"></script>
